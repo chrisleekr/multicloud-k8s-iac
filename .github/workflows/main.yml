@@ -10,7 +10,7 @@ jobs:
           cd /tmp
           wget https://releases.hashicorp.com/terraform/0.13.4/terraform_0.13.4_linux_amd64.zip
           unzip terraform_0.13.4_linux_amd64.zip
-          mv terraform /usr/local/bin
+          sudo mv terraform /usr/local/bin
           terraform version
       - name: Install Helm
         run: |
