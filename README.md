@@ -48,3 +48,22 @@ This is not for a production use.
 
 - [ ] Update MySQL with a replicated stateful application
 - [ ] Add HorizontalPodAutoscaler
+
+## Troubleshooting
+
+### Failed to enable ingress in Mac OS
+
+```bash
+$ minikube addons enable ingress
+❌  Exiting due to MK_USAGE: Due to networking limitations of driver docker on darwin, ingress addon is not supported.
+Alternatively to use this addon you can use a vm-based driver:
+
+   'minikube start --vm=true'
+
+To track the update on this work in progress feature please check:
+https://github.com/kubernetes/minikube/issues/7332
+$ minikube stop
+$ minikube delete
+$ minikube start --vm=true
+$ minikube addons enable ingress
+```
