@@ -23,7 +23,7 @@ resource "helm_release" "local" {
   name      = "nvm"
   chart     = "../helm/nvm"
   namespace = "nvm"
-  timeout   = 180
+  timeout   = 300
 
   set {
     name  = "cluster.enabled"
