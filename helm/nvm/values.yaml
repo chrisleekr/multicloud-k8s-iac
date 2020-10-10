@@ -1,0 +1,218 @@
+# Default values for nvm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+ingress:
+  host: nvm-boilerplate.local
+
+namespace: nvm
+
+apps:
+  api:
+    name: api
+    image:
+      repository: chrisleekr/nodejs-vuejs-mysql-boilerplate
+      version: api-latest
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    containerPort: 3000
+    resources:
+      limits:
+        memory: 128Mi
+        cpu: 64m
+    ingress:
+      path: /api(.*)
+      rewriteTarget: $1
+      configurationSnippet: |
+        rewrite ^(/api)$ $1/ redirect;
+    probes:
+      initialDelaySeconds: 30
+      periodSeconds: 5
+      path: /
+      port: 3000
+    env:
+      - name: "DB_HOST"
+        value: "mysql.nvm-db"
+      - name: "DB_PORT"
+        value: 3306
+      - name: "DB_NAME"
+        value: "boilerplate"
+      - name: "DB_CONNECTION_LIMIT"
+        value: 10
+      - name: "DB_DEBUG"
+        value: "true"
+      - name: "JWT_SECRET_KEY"
+        value: "aaGhu2foo7sheithePhai4Aef"
+      - name: "JWT_EXPIRES_IN"
+        value: "1w"
+      - name: "BCRYPT_SALTING_ROUND"
+        value: 10
+      - name: "API_URL"
+        value: "http://nvm-boilerplate.local/api"
+      - name: "BACKEND_URL"
+        value: "http://backend.nvm-boilerplate.local/"
+      - name: "FRONTEND_URL"
+        value: "http://frontend-nuxt.nvm-boilerplate.local/"
+      - name: "EMAIL_FROM_ADDRESS"
+        value: "support@nvm-boilerplate.local"
+      - name: "EMAIL_FROM_NAME"
+        value: "Support"
+      - name: "SMTP_HOST"
+        value: "mailhog.nvm"
+      - name: "SMTP_PORT"
+        value: 1025
+      - name: "SMTP_SECURE"
+        value: "false"
+      - name: "SMTP_AUTH_USER"
+        value: ""
+      - name: "SMTP_AUTH_PASS"
+        value: ""
+      - name: "SMTP_DEBUG"
+        value: "true"
+      - name: "SMTP_LOGGER"
+        value: "true"
+      - name: "TZ"
+        value: "Australia/Melbourne"
+    secretEnv:
+      - name: "DB_USER"
+        secretKeyRef:
+          name: "nvm-secret"
+          key: "db-user"
+      - name: "DB_PASSWORD"
+        secretKeyRef:
+          name: "nvm-secret"
+          key: "db-password"
+  frontendNuxt:
+    name: frontend-nuxt
+    image:
+      repository: chrisleekr/nodejs-vuejs-mysql-boilerplate
+      version: frontend-nuxt-latest
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    containerPort: 3000
+    resources:
+      limits:
+        memory: 256Mi
+        cpu: 128m
+    ingress:
+      path: /frontend-nuxt(.*)
+      rewriteTarget: /frontend-nuxt$1
+      configurationSnippet: |
+        rewrite ^(/frontend-nuxt)$ $1/ redirect;
+    probes:
+      initialDelaySeconds: 90
+      periodSeconds: 30
+      path: /frontend-nuxt/
+      port: 3000
+    env:
+      - name: "BASE_URL"
+        value: "/frontend-nuxt/"
+      - name: "API_URL"
+        value: "http://nvm-boilerplate.local/api"
+  frontendVue:
+    name: frontend-vue
+    image:
+      repository: chrisleekr/nodejs-vuejs-mysql-boilerplate
+      version: frontend-vue-latest
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    containerPort: 80
+    resources:
+      limits:
+        memory: 128Mi
+        cpu: 64m
+    ingress:
+      path: /frontend-vue(.*)
+      rewriteTarget: $1
+      configurationSnippet: |
+        rewrite ^(/frontend-vue)$ $1/ redirect;
+    probes:
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      path: /frontend-vue/
+      port: 80
+    env:
+      - name: "BASE_URL"
+        value: "/frontend-vue/"
+      - name: "API_URL"
+        value: "http://nvm-boilerplate.local/api"
+  backend:
+    name: backend
+    image:
+      repository: chrisleekr/nodejs-vuejs-mysql-boilerplate
+      version: backend-latest
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    containerPort: 80
+    resources:
+      limits:
+        memory: 128Mi
+        cpu: 64m
+    ingress:
+      path: /backend(.*)
+      rewriteTarget: $1
+      configurationSnippet: |
+        rewrite ^(/backend)$ $1/ redirect;
+    probes:
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      path: /backend/
+      port: 80
+    env:
+      - name: "API_URL"
+        value: "http://nvm-boilerplate.local/api"
+  mailhog:
+    name: mailhog
+    image:
+      repository: mailhog/mailhog
+      version: latest
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    containerPort: 8025
+    resources:
+      limits:
+        memory: 128Mi
+        cpu: 64m
+    ingress:
+      path: /mailhog(.*)
+      rewriteTarget: $1
+      configurationSnippet: |
+        rewrite ^(/mailhog)$ $1/ redirect;
+    probes:
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      path: /
+      port: 8025
+
+mysql:
+  name: mysql
+  image:
+    repository: chrisleekr/nodejs-vuejs-mysql-boilerplate
+    version: mysql-latest
+    pullPolicy: IfNotPresent
+  env:
+    - name: "MYSQL_DATABASE"
+      value: "boilerplate"
+    - name: "TZ"
+      value: "Australia/Melbourne"
+  secretEnv:
+    - name: "DB_PASSWORD"
+      secretKeyRef:
+        name: "nvm-secret"
+        key: "db-password"
+    - name: "MYSQL_ROOT_PASSWORD"
+      secretKeyRef:
+        name: "nvm-secret"
+        key: "db-root-password"
+
+secrets:
+  - key: "db-root-password"
+    value: "root"
+  - key: "db-user"
+    value: "root"
+  - key: "db-password"
+    value: "root"
+  - key: "smtp-auth-user"
+    value: ""
+  - key: "smtp-auth-pass"
+    value: ""

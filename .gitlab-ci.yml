@@ -1,0 +1,35 @@
+stages:
+  - build
+  - lint
+
+.before_script_template: &before-script
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $REGISTRY_DOMAIN
+
+build:
+  stage: build
+  image: docker:stable
+  <<: *before-script
+  script:
+    - docker build -f build/Dockerfile . -t $REGISTRY_DOMAIN/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate:build
+    - docker push $REGISTRY_DOMAIN/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate:build
+
+lint-helm:
+  stage: lint
+  image: $REGISTRY_DOMAIN/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate:build
+  artifacts:
+    paths:
+      - helm/nvm/template
+    expire_in: "7 days"
+  script:
+    - cd helm/nvm
+    - helm lint
+    - helm template . > template
+
+lint-terraform:
+  stage: lint
+  image: $REGISTRY_DOMAIN/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate:build
+  script:
+    - cd terraform
+    - terraform init
+    - terraform validate

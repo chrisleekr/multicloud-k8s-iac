@@ -1,0 +1,26 @@
+{{ range .Values.apps }}
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-{{.name}}
+  namespace: {{$.Values.namespace}}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: {{ .ingress.rewriteTarget }}
+    {{ if .ingress.configurationSnippet }}
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      {{ .ingress.configurationSnippet }}
+    {{ end }}
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
+spec:
+  rules:
+    - host: "{{ $.Values.ingress.host }}"
+      http:
+        paths:
+          - path: {{ .ingress.path }}
+            backend:
+              serviceName: {{.name}}
+              servicePort: {{.containerPort}}
+{{ end }}

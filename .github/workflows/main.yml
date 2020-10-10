@@ -1,0 +1,33 @@
+on: [push]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Terraform
+        run: |
+          cd /tmp
+          wget https://releases.hashicorp.com/terraform/0.13.4/terraform_0.13.4_linux_amd64.zip
+          unzip terraform_0.13.4_linux_amd64.zip
+          mv terraform/terraform /usr/local/bin
+          terraform version
+      - name: Install Helm
+        run: |
+          cd /tmp
+          wget https://get.helm.sh/helm-v3.3.4-linux-amd64.tar.gz
+          tar xvfz helm-v3.3.4-linux-amd64.tar.gz
+          sudo mv linux-amd64/helm /usr/local/bin/helm
+          helm version
+      - name: Checkout source code
+        uses: actions/checkout@master
+      - name: Lint Helm
+        run: |
+          cd $GITHUB_WORKSPACE/helm/nvm
+          helm lint
+          helm template . > template
+      - name: Lint Terraform
+        run: |
+          cd $GITHUB_WORKSPACE/terraform
+          terraform init
+          terraform validate
