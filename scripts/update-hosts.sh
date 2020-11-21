@@ -42,11 +42,11 @@ if grep -Fq "$INGRESS_HOST" $HOSTS_PATH > /dev/null
 then
     if [ $HOST_OS = "darwin" ]
     then
-        sudo sed -i '' "s/^.*$INGRESS_HOST\b.*$/$API_HOSTS_ENTRY/" $HOSTS_PATH
+        sudo sed -i '' "s/^.*$INGRESS_HOST/$API_HOSTS_ENTRY/" $HOSTS_PATH
     else
         sudo sed -i "s/^.*$INGRESS_HOST\b.*$/$API_HOSTS_ENTRY/" $HOSTS_PATH
     fi
-    
+
     echo "Updated $INGRESS_HOST hosts entry"
 else
     echo "$API_HOSTS_ENTRY" | sudo tee -a $HOSTS_PATH

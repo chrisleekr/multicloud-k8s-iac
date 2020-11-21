@@ -9,5 +9,18 @@
     ".git": true,
     "**/.DS_Store": true,
     "**/.vscode": true
-  }
+  },
+  "cSpell.words": [
+    "Autoscaler",
+    "Grafana",
+    "Kubernetes",
+    "Minikube",
+    "Presslabs",
+    "chrisleekr",
+    "containerised",
+    "kubectl",
+    "popd",
+    "pushd",
+    "vuejs"
+  ]
 }

@@ -1,0 +1,11 @@
+namespace: nvm-db
+
+secrets:
+  - key: "ROOT_PASSWORD"
+    value: "root"
+  - key: "USER"
+    value: "boilerplate"
+  - key: "PASSWORD"
+    value: "boilerplate-password"
+  - key: "DATABASE"
+    value: "boilerplate"

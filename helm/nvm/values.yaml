@@ -26,8 +26,8 @@ apps:
       configurationSnippet: |
         rewrite ^(/api)$ $1/ redirect;
     probes:
-      initialDelaySeconds: 30
-      periodSeconds: 5
+      initialDelaySeconds: 60
+      periodSeconds: 60
       path: /
       port: 3000
     env:
@@ -35,8 +35,6 @@ apps:
         value: "mysql.nvm-db"
       - name: "DB_PORT"
         value: 3306
-      - name: "DB_NAME"
-        value: "boilerplate"
       - name: "DB_CONNECTION_LIMIT"
         value: 10
       - name: "DB_DEBUG"
@@ -74,6 +72,10 @@ apps:
       - name: "TZ"
         value: "Australia/Melbourne"
     secretEnv:
+      - name: "DB_NAME"
+        secretKeyRef:
+          name: "nvm-secret"
+          key: "db-name"
       - name: "DB_USER"
         secretKeyRef:
           name: "nvm-secret"
@@ -82,33 +84,6 @@ apps:
         secretKeyRef:
           name: "nvm-secret"
           key: "db-password"
-  frontendNuxt:
-    name: frontend-nuxt
-    image:
-      repository: chrisleekr/nodejs-vuejs-mysql-boilerplate
-      version: frontend-nuxt-latest
-      pullPolicy: IfNotPresent
-    replicaCount: 1
-    containerPort: 3000
-    resources:
-      limits:
-        memory: 256Mi
-        cpu: 128m
-    ingress:
-      path: /frontend-nuxt(.*)
-      rewriteTarget: /frontend-nuxt$1
-      configurationSnippet: |
-        rewrite ^(/frontend-nuxt)$ $1/ redirect;
-    probes:
-      initialDelaySeconds: 90
-      periodSeconds: 30
-      path: /frontend-nuxt/
-      port: 3000
-    env:
-      - name: "BASE_URL"
-        value: "/frontend-nuxt/"
-      - name: "API_URL"
-        value: "http://nvm-boilerplate.local/api"
   frontendVue:
     name: frontend-vue
     image:
@@ -127,8 +102,8 @@ apps:
       configurationSnippet: |
         rewrite ^(/frontend-vue)$ $1/ redirect;
     probes:
-      initialDelaySeconds: 5
-      periodSeconds: 5
+      initialDelaySeconds: 60
+      periodSeconds: 60
       path: /frontend-vue/
       port: 80
     env:
@@ -154,8 +129,8 @@ apps:
       configurationSnippet: |
         rewrite ^(/backend)$ $1/ redirect;
     probes:
-      initialDelaySeconds: 5
-      periodSeconds: 5
+      initialDelaySeconds: 60
+      periodSeconds: 60
       path: /backend/
       port: 80
     env:
@@ -179,40 +154,15 @@ apps:
       configurationSnippet: |
         rewrite ^(/mailhog)$ $1/ redirect;
     probes:
-      initialDelaySeconds: 5
-      periodSeconds: 5
+      initialDelaySeconds: 60
+      periodSeconds: 60
       path: /
       port: 8025
 
-mysql:
-  name: mysql
-  image:
-    repository: chrisleekr/nodejs-vuejs-mysql-boilerplate
-    version: mysql-latest
-    pullPolicy: IfNotPresent
-  env:
-    - name: "MYSQL_DATABASE"
-      value: "boilerplate"
-    - name: "TZ"
-      value: "Australia/Melbourne"
-  secretEnv:
-    - name: "DB_PASSWORD"
-      secretKeyRef:
-        name: "nvm-secret"
-        key: "db-password"
-    - name: "MYSQL_ROOT_PASSWORD"
-      secretKeyRef:
-        name: "nvm-secret"
-        key: "db-root-password"
-
 secrets:
-  - key: "db-root-password"
-    value: "root"
   - key: "db-user"
-    value: "root"
+    value: "boilerplate"
   - key: "db-password"
-    value: "root"
-  - key: "smtp-auth-user"
-    value: ""
-  - key: "smtp-auth-pass"
-    value: ""
+    value: "boilerplate-password"
+  - key: "db-name"
+    value: "boilerplate"

@@ -1,15 +1,15 @@
-# Kubernetes for Node.js (REST API) + Vue.js (Frontend/Backend) + MySQL Boilerplate
+# Kubernetes sample project for Node.js (REST API) + Vue.js (Frontend/Backend) + MySQL Boilerplate
 
 This project demonstrates simple IaC (Infrastructure as Code) for [NVM boilerplate](https://github.com/chrisleekr/nodejs-vuejs-mysql-boilerplate) to Minikube.
 
-This is not for a production use.
+This is a Kubernetes sample project, not for a production use.
 
 ## Prerequisites
 
-- [Minikube v1.13.1](https://kubernetes.io/docs/tasks/tools/install-minikube/)
-- [Kubernetes v.1.19.2](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-- [Helm v3.3.4](https://helm.sh/docs/intro/install/)
-- [Terraform v0.13.3](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+- [Minikube v1.15.1](https://kubernetes.io/docs/tasks/tools/install-minikube/)
+- [Kubernetes v.1.19.4](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+- [Helm v3.4.1](https://helm.sh/docs/intro/install/)
+- [Terraform v0.13.5](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 
 ## How to test in your Minikube
 
@@ -38,32 +38,36 @@ This is not for a production use.
 ## With this project, you can find
 
 - Sample Terraform
-- Sample Helm charts to deploy multiple micro-services
+- Sample Helm charts to deploy multiple containerised micro-services
 
-## Repository: Node.js + Vue.js + MySQL Boilerplate
+## Micro-services Repository: Node.js + Vue.js + MySQL Boilerplate
 
 - [https://github.com/chrisleekr/nodejs-vuejs-mysql-boilerplate](https://github.com/chrisleekr/nodejs-vuejs-mysql-boilerplate)
 
-## Todo
+## Presslabs MySQL Cluster
 
-- [ ] Update MySQL with a replicated stateful application
-- [ ] Add HorizontalPodAutoscaler
-
-## Troubleshooting
-
-### Failed to enable ingress in Mac OS
+To see orchestrator, run following port forward and open [http://localhost:8080](http://localhost:8080)
 
 ```bash
-$ minikube addons enable ingress
-❌  Exiting due to MK_USAGE: Due to networking limitations of driver docker on darwin, ingress addon is not supported.
-Alternatively to use this addon you can use a vm-based driver:
-
-   'minikube start --vm=true'
-
-To track the update on this work in progress feature please check:
-https://github.com/kubernetes/minikube/issues/7332
-$ minikube stop
-$ minikube delete
-$ minikube start --vm=true
-$ minikube addons enable ingress
+$ kubectl -nnvm-db port-forward service/presslabs-mysql-operator 8080:80
 ```
+
+To see operator logs, run following command
+
+```bash
+$ kubectl -nnvm-db logs presslabs-mysql-operator-0 -c operator -f
+```
+
+To access mysql, run following command
+
+```bash
+$ kubectl -nnvm-db port-forward mysql-cluster-mysql-0 3307:3306
+$ mysql -h127.0.0.1 -uroot -proot -P3307 boilerplate
+```
+
+## Todo
+
+- [x] Update MySQL with a replicated stateful application - Use presslabs/mysql-cluster
+- [ ] Expose MySQL write node for migration to avoid api migration failure
+- [ ] Add HorizontalPodAutoscaler
+- [ ] Add Prometheus and Grafana
