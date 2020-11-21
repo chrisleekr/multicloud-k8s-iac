@@ -19,11 +19,42 @@ provider "helm" {
   }
 }
 
-resource "helm_release" "local" {
+resource "helm_release" "mysql-operator" {
+  depends_on = [
+    kubernetes_namespace.nvm-db-namespace
+  ]
+
+  name       = "presslabs"
+  repository = "https://presslabs.github.io/charts"
+  chart      = "mysql-operator"
+  version    = "0.4.0"
+  namespace  = "nvm-db"
+  timeout    = 360
+}
+
+resource "helm_release" "nvm-db" {
+  depends_on = [
+    kubernetes_namespace.nvm-db-namespace,
+    helm_release.mysql-operator
+  ]
+
+  name      = "nvm-db"
+  chart     = "../helm/nvm-db"
+  namespace = "nvm-db"
+  timeout   = 360
+
+}
+
+resource "helm_release" "nvm" {
+  depends_on = [
+    kubernetes_namespace.nvm-namespace,
+    helm_release.nvm-db
+  ]
+
   name      = "nvm"
   chart     = "../helm/nvm"
   namespace = "nvm"
-  timeout   = 300
+  timeout   = 600
 
   set {
     name  = "cluster.enabled"
