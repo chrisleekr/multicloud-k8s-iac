@@ -44,7 +44,7 @@ This is a Kubernetes sample project, not for a production use.
 
 - [https://github.com/chrisleekr/nodejs-vuejs-mysql-boilerplate](https://github.com/chrisleekr/nodejs-vuejs-mysql-boilerplate)
 
-## Presslabs MySQL Cluster
+## Presslabs MySQL Operator
 
 To see orchestrator, run following port forward and open [http://localhost:8080](http://localhost:8080)
 
@@ -67,7 +67,7 @@ $ mysql -h127.0.0.1 -uroot -proot -P3307 boilerplate
 
 ## Todo
 
-- [x] Update MySQL with a replicated stateful application - Use presslabs/mysql-cluster
+- [x] Update MySQL with a replicated stateful application - Use presslabs/mysql-operator
 - [ ] Expose MySQL write node for migration to avoid api migration failure
 - [ ] Add HorizontalPodAutoscaler
 - [ ] Add Prometheus and Grafana

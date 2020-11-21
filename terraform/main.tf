@@ -19,7 +19,7 @@ provider "helm" {
   }
 }
 
-resource "helm_release" "mysql-cluster" {
+resource "helm_release" "mysql-operator" {
   depends_on = [
     kubernetes_namespace.nvm-db-namespace
   ]
@@ -35,7 +35,7 @@ resource "helm_release" "mysql-cluster" {
 resource "helm_release" "nvm-db" {
   depends_on = [
     kubernetes_namespace.nvm-db-namespace,
-    helm_release.mysql-cluster
+    helm_release.mysql-operator
   ]
 
   name      = "nvm-db"
