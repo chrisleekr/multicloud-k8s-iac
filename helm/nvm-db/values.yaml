@@ -1,5 +1,7 @@
 namespace: nvm-db
 
+replicas: 2
+
 secrets:
   - key: "ROOT_PASSWORD"
     value: "root"
