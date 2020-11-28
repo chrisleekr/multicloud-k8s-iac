@@ -5,13 +5,13 @@ metadata:
   name: mysql-cluster
   namespace: {{$.Values.namespace}}
 spec:
-  replicas: 2
+  replicas: {{$.Values.replicas}}
   secretName: mysql-secret
   podSpec:
     resources:
       requests:
         memory: 1G
-        cpu: 200m
+        cpu: 512m
   volumeSpec:
     persistentVolumeClaim:
       accessModes: ["ReadWriteOnce"]

@@ -6,7 +6,7 @@ metadata:
   name: {{.name}}
   namespace: {{$.Values.namespace}}
   labels:
-    environment: minikube
+    environment: {{$.Values.environment}}
     app: {{.name}}
 spec:
   replicas: {{.replicaCount}}

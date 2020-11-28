@@ -6,6 +6,34 @@ ingress:
   host: nvm-boilerplate.local
 
 namespace: nvm
+environment: minikube
+
+migration:
+  image:
+    repository: chrisleekr/nodejs-vuejs-mysql-boilerplate
+    version: api-latest
+  env:
+    - name: "DB_HOST"
+      value: "mysql-cluster-mysql-master.nvm-db"
+    - name: "DB_PORT"
+      value: 3306
+    - name: "DB_CONNECTION_LIMIT"
+      value: 10
+    - name: "DB_DEBUG"
+      value: "true"
+  secretEnv:
+    - name: "DB_NAME"
+      secretKeyRef:
+        name: "nvm-secret"
+        key: "db-name"
+    - name: "DB_USER"
+      secretKeyRef:
+        name: "nvm-secret"
+        key: "db-user"
+    - name: "DB_PASSWORD"
+      secretKeyRef:
+        name: "nvm-secret"
+        key: "db-password"
 
 apps:
   api:
@@ -26,8 +54,8 @@ apps:
       configurationSnippet: |
         rewrite ^(/api)$ $1/ redirect;
     probes:
-      initialDelaySeconds: 60
-      periodSeconds: 60
+      initialDelaySeconds: 10
+      periodSeconds: 30
       path: /
       port: 3000
     env:
@@ -102,8 +130,8 @@ apps:
       configurationSnippet: |
         rewrite ^(/frontend-vue)$ $1/ redirect;
     probes:
-      initialDelaySeconds: 60
-      periodSeconds: 60
+      initialDelaySeconds: 10
+      periodSeconds: 30
       path: /frontend-vue/
       port: 80
     env:
@@ -129,8 +157,8 @@ apps:
       configurationSnippet: |
         rewrite ^(/backend)$ $1/ redirect;
     probes:
-      initialDelaySeconds: 60
-      periodSeconds: 60
+      initialDelaySeconds: 10
+      periodSeconds: 30
       path: /backend/
       port: 80
     env:
@@ -154,8 +182,8 @@ apps:
       configurationSnippet: |
         rewrite ^(/mailhog)$ $1/ redirect;
     probes:
-      initialDelaySeconds: 60
-      periodSeconds: 60
+      initialDelaySeconds: 10
+      periodSeconds: 30
       path: /
       port: 8025
 

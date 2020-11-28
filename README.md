@@ -18,6 +18,7 @@ This is a Kubernetes sample project, not for a production use.
    ```bash
    $ minikube start
    $ minikube addons enable ingress
+   $ minikube addons enable metrics-server
    ```
 
 2. Go to `terraform` folder
@@ -27,6 +28,12 @@ This is a Kubernetes sample project, not for a production use.
    $ terraform init
    $ terraform plan
    $ terraform apply
+   ```
+
+   or simply run bash script
+
+   ```bash
+   $ ./script/deploy.sh
    ```
 
 4. Update hosts file
@@ -46,11 +53,15 @@ This is a Kubernetes sample project, not for a production use.
 
 ## Presslabs MySQL Operator
 
-To see orchestrator, run following port forward and open [http://localhost:8080](http://localhost:8080)
+To see orchestrator, run following port forward.
 
 ```bash
 $ kubectl -nnvm-db port-forward service/presslabs-mysql-operator 8080:80
 ```
+
+![image](https://user-images.githubusercontent.com/5715919/100513791-ed9ff900-31c3-11eb-80c6-7a3d332d272d.png)
+
+And open [http://localhost:8080](http://localhost:8080)
 
 To see operator logs, run following command
 
@@ -65,9 +76,39 @@ $ kubectl -nnvm-db port-forward mysql-cluster-mysql-0 3307:3306
 $ mysql -h127.0.0.1 -uroot -proot -P3307 boilerplate
 ```
 
+## Horizontal Pod Autoscaler
+
+```bash
+$ kubectl get hpa --all-namespaces
+```
+
+If you see `<unknown>/50%`, make sure you enabled metrics-server.
+
+```bash
+$ minikube addons enable metrics-server
+```
+
+## Prometheus & Grafana
+
+You can access Grafana via `http://nvm-boilerplate.local/grafana`.
+
+Once the deployment is completed, then you will see the result like below:
+
+```text
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+
+Outputs:
+
+grafana_admin_password = ynSVNykpU72RM5x6
+```
+
+For example, as above, if admin password `ynSVNykpU72RM5x6` then you can login Grafana with `admin`/`ynSVNykpU72RM5x6`.
+
+![image](https://user-images.githubusercontent.com/5715919/100513860-4a031880-31c4-11eb-8ef2-04202055aa78.png)
+
 ## Todo
 
 - [x] Update MySQL with a replicated stateful application - Use presslabs/mysql-operator
-- [ ] Expose MySQL write node for migration to avoid api migration failure
-- [ ] Add HorizontalPodAutoscaler
-- [ ] Add Prometheus and Grafana
+- [x] Add HorizontalPodAutoscaler
+- [x] Add Prometheus and Grafana
+- [x] Expose MySQL write node for migration to avoid api migration failure
