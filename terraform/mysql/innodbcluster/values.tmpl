@@ -1,0 +1,76 @@
+# https://github.com/mysql/mysql-operator/blob/trunk/helm/mysql-innodbcluster/values.yaml
+
+image:
+  pullPolicy: IfNotPresent
+  pullSecrets:
+    enabled: false
+    secretName:
+
+credentials:
+  root:
+    user: root
+    password: ${credentials_root_password}
+    host: "%"
+
+tls:
+  useSelfSigned: true
+
+#serverVersion: 8.0.31
+serverInstances: 3
+routerInstances: 3
+baseServerId: 1000
+
+#initDB:
+#  dump:
+#    name:
+#    path:
+#    options:
+#      includeSchemas:
+#    ociObjectStorage:
+#      prefix:
+#      bucketName:
+#      credentials:
+#    persistentVolumeClaim:
+#  clone:
+#    donorUrl:
+#    rootUser:
+#    credentials:
+
+podSpec:
+  containers:
+  - name: mysql
+    resources:
+#      requests:
+#        memory: "2048Mi"  # adapt to your needs
+#        cpu: "1800m"      # adapt to your needs
+      limits:
+        memory: "8192Mi"  # adapt to your needs
+        cpu: "3600m"      # adapt to your needs
+
+serverConfig:
+  mycnf: |
+    [mysqld]
+    core_file
+    local_infile=off
+    default_authentication_plugin=mysql_native_password
+
+datadirVolumeClaimTemplate:
+  storageClassName: ""
+  accessModes: ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+
+backupProfiles:
+- name: backup-profile-pvc
+  dumpInstance:
+    storage:
+      persistentVolumeClaim:
+        claimName: backup-pvc
+
+backupSchedules:
+- name: backup-pvc
+  schedule: "0 0 * * *"
+  deleteBackupData: true
+  backupProfileName: backup-profile-pvc
+  enabled: true

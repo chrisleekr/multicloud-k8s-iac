@@ -7,10 +7,10 @@ metadata:
   labels:
     environment: {{$.Values.environment}}
     app: migration
-  annotations:
-    helm.sh/hook: "post-install,post-upgrade"
-    helm.sh/hook-weight: "1"
-    helm.sh/hook-delete-policy: hook-succeeded
+  # annotations:
+  #   helm.sh/hook: "post-install,post-upgrade"
+  #   helm.sh/hook-weight: "1"
+  #   helm.sh/hook-delete-policy: hook-succeeded
 spec:
   backoffLimit: 3
   activeDeadlineSeconds: 600

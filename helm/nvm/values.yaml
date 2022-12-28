@@ -13,15 +13,19 @@ migration:
     repository: chrisleekr/nodejs-vuejs-mysql-boilerplate
     version: api-latest
   env:
-    - name: "DB_HOST"
-      value: "mysql-cluster-mysql-master.nvm-db"
-    - name: "DB_PORT"
-      value: 3306
     - name: "DB_CONNECTION_LIMIT"
       value: 10
     - name: "DB_DEBUG"
       value: "true"
   secretEnv:
+    - name: "DB_HOST"
+      secretKeyRef:
+        name: "nvm-secret"
+        key: "db-host"
+    - name: "DB_PORT"
+      secretKeyRef:
+        name: "nvm-secret"
+        key: "db-port"
     - name: "DB_NAME"
       secretKeyRef:
         name: "nvm-secret"
@@ -188,6 +192,10 @@ apps:
       port: 8025
 
 secrets:
+  - key: "db-host"
+    value: "mysql-innodbcluster-instances.mysql.svc.cluster.local"
+  - key: "db-port"
+    value: 3306
   - key: "db-user"
     value: "boilerplate"
   - key: "db-password"

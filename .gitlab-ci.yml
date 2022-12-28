@@ -27,10 +27,6 @@ lint-helm:
     - helm lint
     - helm template . > template
     - popd
-    - pushd helm/nvm-db
-    - helm lint
-    - helm template . > template
-    - popd
 
 lint-terraform:
   stage: lint
