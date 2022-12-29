@@ -23,7 +23,7 @@ mysql_execute(){
 }
 
 echo "Creating new user..."
-mysql_execute "CREATE USER IF NOT EXISTS '$NEW_MYSQL_USER'@'localhost' IDENTIFIED BY '$NEW_MYSQL_USER_PASSWORD'"
+mysql_execute "CREATE USER IF NOT EXISTS '$NEW_MYSQL_USER'@'%' IDENTIFIED WITH mysql_native_password BY '$NEW_MYSQL_USER_PASSWORD'"
 
 echo "Creating new database..."
 mysql_execute "CREATE DATABASE IF NOT EXISTS $NEW_MYSQL_DATABASE"

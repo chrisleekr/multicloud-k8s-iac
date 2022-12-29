@@ -16,8 +16,8 @@ tls:
   useSelfSigned: true
 
 #serverVersion: 8.0.31
-serverInstances: 3
-routerInstances: 3
+serverInstances: 2
+routerInstances: 2
 baseServerId: 1000
 
 #initDB:
@@ -40,9 +40,9 @@ podSpec:
   containers:
   - name: mysql
     resources:
-#      requests:
-#        memory: "2048Mi"  # adapt to your needs
-#        cpu: "1800m"      # adapt to your needs
+      requests:
+        memory: "512Mi"  # adapt to your needs
+        cpu: "500m"      # adapt to your needs
       limits:
         memory: "8192Mi"  # adapt to your needs
         cpu: "3600m"      # adapt to your needs
@@ -50,8 +50,6 @@ podSpec:
 serverConfig:
   mycnf: |
     [mysqld]
-    core_file
-    local_infile=off
     default_authentication_plugin=mysql_native_password
 
 datadirVolumeClaimTemplate:
@@ -61,16 +59,17 @@ datadirVolumeClaimTemplate:
     requests:
       storage: 2Gi
 
-backupProfiles:
-- name: backup-profile-pvc
-  dumpInstance:
-    storage:
-      persistentVolumeClaim:
-        claimName: backup-pvc
+#backupProfiles:
+#- name: local-backup-pvc
+#  dumpInstance:
+#    storage:
+#      persistentVolumeClaim:
+#        claimName: local-backup
+#
+#backupSchedules:
+#- enabled: true
+#  name: local-backup
+#  schedule: "0 0 * * *"
+#  deleteBackupData: false
+#  backupProfileName: local-backup-pvc
 
-backupSchedules:
-- name: backup-pvc
-  schedule: "0 0 * * *"
-  deleteBackupData: true
-  backupProfileName: backup-profile-pvc
-  enabled: true

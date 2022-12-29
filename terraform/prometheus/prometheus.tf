@@ -20,7 +20,7 @@ resource "helm_release" "prometheus_operator" {
   name       = "kube-prometheus-stack"
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
-  version    = "12.2.3"
+  version    = "43.2.0"
   namespace  = "prometheus"
   timeout    = 360
 

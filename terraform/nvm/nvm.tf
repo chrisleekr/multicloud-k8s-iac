@@ -4,6 +4,19 @@ resource "kubernetes_namespace" "nvm_namespace" {
     name = "nvm"
   }
 }
+
+
+resource "random_password" "jwt_secret_key" {
+  length  = 32
+  special = false
+}
+
+resource "random_password" "jwt_refresh_secret_key" {
+  length  = 32
+  special = false
+}
+
+
 resource "helm_release" "nvm" {
   depends_on = [
     kubernetes_namespace.nvm_namespace
@@ -25,7 +38,7 @@ resource "helm_release" "nvm" {
   }
   set_sensitive {
     name  = "secrets[0].value"
-    value = "mysql-innodbcluster-instances.mysql.svc.cluster.local"
+    value = "mysql-innodbcluster.mysql.svc.cluster.local"
   }
 
   set {
@@ -34,7 +47,7 @@ resource "helm_release" "nvm" {
   }
   set_sensitive {
     name  = "secrets[1].value"
-    value = 3306
+    value = 6446
   }
 
   set {
@@ -62,6 +75,24 @@ resource "helm_release" "nvm" {
   set_sensitive {
     name  = "secrets[4].value"
     value = "boilerplate"
+  }
+
+  set {
+    name  = "secrets[5].key"
+    value = "jwt-secret-key"
+  }
+  set_sensitive {
+    name  = "secrets[5].value"
+    value = random_password.jwt_secret_key.result
+  }
+
+  set {
+    name  = "secrets[6].key"
+    value = "jwt-refresh-secret-key"
+  }
+  set_sensitive {
+    name  = "secrets[6].value"
+    value = random_password.jwt_refresh_secret_key.result
   }
 
 }

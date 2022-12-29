@@ -26,7 +26,7 @@ resource "kubernetes_job" "initialise_mysql" {
   ]
 
   metadata {
-    name      = "mysql-initialisation"
+    name      = "initialisation"
     namespace = "mysql"
   }
 
@@ -42,7 +42,7 @@ resource "kubernetes_job" "initialise_mysql" {
           }
         }
         container {
-          name  = "mysql-initialisation"
+          name  = "initialisation"
           image = "alpine:3.17"
           volume_mount {
             mount_path = "/tmp/initialise.sh"
@@ -54,11 +54,11 @@ resource "kubernetes_job" "initialise_mysql" {
           ]
           env {
             name  = "MYSQL_HOST"
-            value = "mysql-innodbcluster-instances.mysql.svc.cluster.local"
+            value = "mysql-innodbcluster.mysql.svc.cluster.local"
           }
           env {
             name  = "MYSQL_PORT"
-            value = 3306
+            value = 6446
           }
           env {
             name  = "MYSQL_ROOT_USER"
@@ -87,10 +87,10 @@ resource "kubernetes_job" "initialise_mysql" {
     }
     backoff_limit = 2
   }
-}
+  wait_for_completion = true
+  timeouts {
+    create = "5m"
+    update = "5m"
+  }
 
-resource "null_resource" "wait_for_initialisation" {
-  depends_on = [
-    kubernetes_job.initialise_mysql
-  ]
 }

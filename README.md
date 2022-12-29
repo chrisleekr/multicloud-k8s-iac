@@ -6,8 +6,8 @@ This is a Kubernetes sample project, not for a production use.
 
 ## Prerequisites
 
-- [Minikube v1.18.1](https://kubernetes.io/docs/tasks/tools/install-minikube/)
-- [Kubernetes v.1.25.4](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+- [Minikube v1.28.0](https://kubernetes.io/docs/tasks/tools/install-minikube/)
+- [Kubernetes v1.20.2](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 - [Helm v3.4.1](https://helm.sh/docs/intro/install/)
 - [Terraform v1.3.6](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 
@@ -16,12 +16,11 @@ This is a Kubernetes sample project, not for a production use.
 1. Start minikube
 
    ```bash
-   $ minikube start
-   $ minikube addons enable ingress
-   $ minikube addons enable metrics-server
+   $ minikube start --addons ingress,metrics-server
    ```
 
 2. Go to `terraform` folder
+
 3. Run Terraform commands
 
    ```bash
@@ -42,6 +41,8 @@ This is a Kubernetes sample project, not for a production use.
    $ ./script/update-hosts.sh
    ```
 
+5. Open new browser and go to [nvm-boilerplate.local](http://nvm-boilerplate.local)
+
 ## With this project, you can find
 
 - Sample Terraform
@@ -51,29 +52,20 @@ This is a Kubernetes sample project, not for a production use.
 
 - [https://github.com/chrisleekr/nodejs-vuejs-mysql-boilerplate](https://github.com/chrisleekr/nodejs-vuejs-mysql-boilerplate)
 
-## Presslabs MySQL Operator
+## Oracle MySQL Operator
 
-To see orchestrator, run following port forward.
-
-```bash
-$ kubectl -nnvm-db port-forward service/presslabs-mysql-operator 8080:80
-```
-
-![image](https://user-images.githubusercontent.com/5715919/100513791-ed9ff900-31c3-11eb-80c6-7a3d332d272d.png)
-
-And open [http://localhost:8080](http://localhost:8080)
-
-To see operator logs, run following command
+To access MySQL, run following command
 
 ```bash
-$ kubectl -nnvm-db logs presslabs-mysql-operator-0 -c operator -f
-```
+# Get root password
+$ kubectl -nmysql get secrets mysql-innodbcluster-cluster-secret -oyaml
+$ echo "<rootPassword>" | base64 -d
 
-To access mysql, run following command
+# Port forward
+$ kubectl -nmysql port-forward svc/mysql-innodbcluster 6446:6446
 
-```bash
-$ kubectl -nnvm-db port-forward mysql-cluster-mysql-0 3307:3306
-$ mysql -h127.0.0.1 -uroot -proot -P3307 boilerplate
+# Access to R/W MySQL
+$ mysql -h127.0.0.1 -uroot -p -P6446 boilerplate
 ```
 
 ## Horizontal Pod Autoscaler
@@ -99,10 +91,18 @@ Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
 
 Outputs:
 
-grafana_admin_password = ynSVNykpU72RM5x6
+grafana_admin_password = <sensitive>
+mysql_boilerplate_password = <sensitive>
+mysql_root_password = <sensitive>
 ```
 
-For example, as above, if admin password `ynSVNykpU72RM5x6` then you can login Grafana with `admin`/`ynSVNykpU72RM5x6`.
+You can get the password by executing the following command:
+
+```bash
+terraform output grafana_admin_password
+```
+
+With the password, you can login Grafana with `admin`/`<Password>`.
 
 ![image](https://user-images.githubusercontent.com/5715919/100513860-4a031880-31c4-11eb-8ef2-04202055aa78.png)
 
@@ -112,3 +112,4 @@ For example, as above, if admin password `ynSVNykpU72RM5x6` then you can login G
 - [x] Add HorizontalPodAutoscaler
 - [x] Add Prometheus and Grafana
 - [x] Expose MySQL write node for migration to avoid api migration failure
+- [x] Replaced presslab/mysql-operator to Oracle MySQL operator/InnoDB cluster
