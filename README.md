@@ -7,7 +7,7 @@ This is a Kubernetes sample project, not for a production use.
 ## Prerequisites
 
 - [Minikube v1.28.0](https://kubernetes.io/docs/tasks/tools/install-minikube/)
-- [Kubernetes v1.20.2](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+- [Kubernetes v1.26.0](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 - [Helm v3.4.1](https://helm.sh/docs/intro/install/)
 - [Terraform v1.3.6](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 
