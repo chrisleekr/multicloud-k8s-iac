@@ -13,15 +13,19 @@ migration:
     repository: chrisleekr/nodejs-vuejs-mysql-boilerplate
     version: api-latest
   env:
-    - name: "DB_HOST"
-      value: "mysql-cluster-mysql-master.nvm-db"
-    - name: "DB_PORT"
-      value: 3306
     - name: "DB_CONNECTION_LIMIT"
       value: 10
     - name: "DB_DEBUG"
       value: "true"
   secretEnv:
+    - name: "DB_HOST"
+      secretKeyRef:
+        name: "nvm-secret"
+        key: "db-host"
+    - name: "DB_PORT"
+      secretKeyRef:
+        name: "nvm-secret"
+        key: "db-port"
     - name: "DB_NAME"
       secretKeyRef:
         name: "nvm-secret"
@@ -59,16 +63,10 @@ apps:
       path: /
       port: 3000
     env:
-      - name: "DB_HOST"
-        value: "mysql.nvm-db"
-      - name: "DB_PORT"
-        value: 3306
       - name: "DB_CONNECTION_LIMIT"
         value: 10
       - name: "DB_DEBUG"
         value: "true"
-      - name: "JWT_SECRET_KEY"
-        value: "aaGhu2foo7sheithePhai4Aef"
       - name: "JWT_EXPIRES_IN"
         value: "1w"
       - name: "BCRYPT_SALTING_ROUND"
@@ -100,6 +98,14 @@ apps:
       - name: "TZ"
         value: "Australia/Melbourne"
     secretEnv:
+      - name: "DB_HOST"
+        secretKeyRef:
+          name: "nvm-secret"
+          key: "db-host"
+      - name: "DB_PORT"
+        secretKeyRef:
+          name: "nvm-secret"
+          key: "db-port"
       - name: "DB_NAME"
         secretKeyRef:
           name: "nvm-secret"
@@ -112,6 +118,14 @@ apps:
         secretKeyRef:
           name: "nvm-secret"
           key: "db-password"
+      - name: "JWT_SECRET_KEY"
+        secretKeyRef:
+          name: "nvm-secret"
+          key: "jwt-secret-key"
+      - name: "JWT_REFRESH_SECRET_KEY"
+        secretKeyRef:
+          name: "nvm-secret"
+          key: "jwt-refresh-secret-key"
   frontendVue:
     name: frontend-vue
     image:
@@ -188,9 +202,17 @@ apps:
       port: 8025
 
 secrets:
+  - key: "db-host"
+    value: "mysql-innodbcluster.mysql.svc.cluster.local"
+  - key: "db-port"
+    value: 6446
   - key: "db-user"
     value: "boilerplate"
   - key: "db-password"
     value: "boilerplate-password"
   - key: "db-name"
     value: "boilerplate"
+  - key: "jwt-secret-key"
+    value: ""
+  - key: "jwt-refresh-secret-key"
+    value: ""
