@@ -1,0 +1,51 @@
+{
+  "name": "k8s-nodejs-vuejs-mysql-boilerplate",
+  "version": "1.0.0",
+  "description": "Provisioning Kubernetes on Minikube/GKE with Terraform",
+  "keywords": [
+    "terraform",
+    "helm",
+    "kubectl",
+    "kubernetes"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate.git"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "precommit": "lint-staged",
+    "lint:gcp": "tflint gcp",
+    "docker:build": "./scripts/docker-build.sh",
+    "docker:run": "./scripts/docker-run.sh",
+    "docker:shell": "docker exec -it \"k8s-nodejs-vuejs-mysql-boilerplate\" /bin/bash",
+    "docker:exec": "npm run docker:run && npm run docker:shell"
+  },
+  "author": "Chris Lee <git@chrislee.kr>",
+  "license": "UNLICENSED",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate/issues"
+  },
+  "homepage": "https://github.com/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^17.6.6",
+    "@commitlint/config-conventional": "^17.6.6",
+    "branch-name-lint": "^2.1.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
+    "prettier": "^3.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit"
+    }
+  },
+  "lint-staged": {
+    "*.{tf,hcl,tfbackend}": [
+      "cd ./workspaces && terraform fmt -recursive && cd ..",
+      "cd ./workspaces && terraform validate && cd ..",
+      "git add"
+    ]
+  }
+}

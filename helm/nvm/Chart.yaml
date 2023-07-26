@@ -1,5 +1,0 @@
-apiVersion: v2
-name: nvm
-description: A Helm chart for Kubernetes
-version: 0.1.7
-icon: https://github.com/chrisleekr/nodejs-vuejs-mysql-boilerplate/raw/master/frontend-nuxt/static/icon.png

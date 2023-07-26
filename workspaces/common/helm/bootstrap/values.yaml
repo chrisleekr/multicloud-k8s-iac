@@ -1,0 +1,4 @@
+clusterIssuer:
+  create: true
+  email: support@boilerplate.local
+  ingressClass: nginx

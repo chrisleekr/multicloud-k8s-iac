@@ -1,0 +1,57 @@
+{{ range .Values.apps }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.name}}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    environment: {{$.Values.environment}}
+    app: {{.name}}
+spec:
+  replicas: {{.replicaCount}}
+  selector:
+    matchLabels:
+      app: {{.name}}
+  template:
+    metadata:
+      labels:
+        app: {{.name}}
+    spec:
+      containers:
+        - name: {{.name}}
+          image: "{{ .image.repository }}:{{ .image.version }}"
+          imagePullPolicy: {{.image.pullPolicy}}
+          ports:
+            - name: http
+              containerPort: {{.containerPort}}
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: {{.probes.initialDelaySeconds}}
+            periodSeconds: {{.probes.periodSeconds}}
+            httpGet:
+              path: {{.probes.path}}
+              port: {{.probes.port}}
+          readinessProbe:
+            initialDelaySeconds: {{.probes.initialDelaySeconds}}
+            periodSeconds: {{.probes.periodSeconds}}
+            httpGet:
+              path: {{.probes.path}}
+              port: {{.probes.port}}
+          resources:
+            limits:
+              memory: "{{ .resources.limits.memory }}"
+              cpu: "{{ .resources.limits.cpu }}"
+          env:
+            {{- range $key, $val := .env }}
+            - name: {{ $key }}
+              value: {{ $val | toString | quote }}
+            {{- end }}
+            {{- range $key, $val := .secretEnv }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $val.secretKeyRef.name }}
+                  key: {{ $val.secretKeyRef.key }}
+            {{- end }}
+{{ end }}

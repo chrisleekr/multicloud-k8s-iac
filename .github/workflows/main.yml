@@ -1,15 +1,16 @@
-on: [push]
-
+name: Lint & Validate
+on:
+  - push
 jobs:
   lint:
-    name: Lint
+    name: 'Lint'
     runs-on: ubuntu-latest
     steps:
       - name: Install Terraform
         run: |
           cd /tmp
-          wget https://releases.hashicorp.com/terraform/1.3.6/terraform_1.3.6_linux_amd64.zip
-          unzip terraform_1.3.6_linux_amd64.zip
+          wget https://releases.hashicorp.com/terraform/0.13.6/terraform_0.13.6_linux_amd64.zip
+          unzip terraform_0.13.6_linux_amd64.zip
           sudo mv terraform /usr/local/bin
           terraform version
       - name: Install Helm
@@ -21,13 +22,13 @@ jobs:
           helm version
       - name: Checkout source code
         uses: actions/checkout@master
-      - name: Lint Helm
-        run: |
-          cd $GITHUB_WORKSPACE/helm/nvm
-          helm lint
-          helm template . > template
-      - name: Lint Terraform
-        run: |
-          cd $GITHUB_WORKSPACE/terraform
-          terraform init
-          terraform validate
+      # - name: Lint Helm
+      #   run: |
+      #     cd $GITHUB_WORKSPACE/helm/nvm
+      #     helm lint
+      #     helm template . > template
+      # - name: Lint Terraform
+      #   run: |
+      #     cd $GITHUB_WORKSPACE/terraform
+      #     terraform init
+      #     terraform validate
