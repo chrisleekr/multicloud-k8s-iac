@@ -1,0 +1,5 @@
+apiVersion: v2
+name: nvm
+description: A Helm chart for NVM Boilerplate
+version: 0.1.8
+icon: https://github.com/chrisleekr/nodejs-vuejs-mysql-boilerplate/raw/master/frontend-nuxt/static/icon.png

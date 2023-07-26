@@ -1,26 +1,53 @@
 {
   "editor.insertSpaces": true,
   "editor.formatOnSave": true,
-  "editor.tabSize": 2,
   "files.trimTrailingWhitespace": true,
   "files.exclude": {},
   "files.insertFinalNewline": true,
-  "search.exclude": {
-    ".git": true,
-    "**/.DS_Store": true,
-    "**/.vscode": true
-  },
   "cSpell.words": [
     "Autoscaler",
-    "Grafana",
-    "Kubernetes",
-    "Minikube",
-    "Presslabs",
     "chrisleekr",
     "containerised",
+    "Grafana",
+    "innodbcluster",
     "kubectl",
+    "Kubernetes",
+    "mailhog",
+    "Minikube",
     "popd",
+    "Presslabs",
     "pushd",
     "vuejs"
-  ]
+  ],
+  "search.exclude": {
+    ".git": true,
+    ".build": true,
+    "**/.DS_Store": true,
+    "**/.vscode": true,
+    "**/node_modules": true
+  },
+  "yaml.format.enable": true,
+  "files.associations": {
+    "ansible/**/*.yml": "ansible"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "stylelint.vscode-stylelint"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[terraform]": {},
+  "ansible.python.interpreterPath": "/usr/bin/python3"
 }

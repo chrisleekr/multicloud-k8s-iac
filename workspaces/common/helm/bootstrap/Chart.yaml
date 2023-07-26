@@ -1,0 +1,5 @@
+apiVersion: v2
+name: init
+description: A Helm chart for bootstrapping initial configurations
+version: 0.1.0
+icon: https://github.com/chrisleekr/nodejs-vuejs-mysql-boilerplate/raw/master/frontend-nuxt/static/icon.png

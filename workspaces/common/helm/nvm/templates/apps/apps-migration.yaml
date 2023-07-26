@@ -1,0 +1,35 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migration
+  namespace: {{ .Release.Namespace }}
+  labels:
+    environment: {{$.Values.environment}}
+    app: migration
+  # annotations:
+  #   helm.sh/hook: "post-install,post-upgrade"
+  #   helm.sh/hook-weight: "1"
+  #   helm.sh/hook-delete-policy: hook-succeeded
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: migration
+          image: "{{$.Values.migration.image.repository}}:{{$.Values.migration.image.version}}"
+          command: ["/usr/local/bin/migration.sh"]
+          env:
+            {{- range $key, $val := $.Values.migration.env }}
+            - name: {{ $key }}
+              value: {{ $val | toString | quote }}
+            {{- end }}
+            {{- range $key, $val := $.Values.migration.secretEnv }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $val.secretKeyRef.name }}
+                  key: {{ $val.secretKeyRef.key }}
+            {{- end }}

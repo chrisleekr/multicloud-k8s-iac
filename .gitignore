@@ -1,6 +1,10 @@
-terraform/.terraform
-terraform/terraform.tfstate
-terraform/terraform.tfstate.backup
-terraform/.terraform.tfstate.lock.info
-helm/nvm/template
-helm/nvm-db/template
+**/.terraform
+**/terraform.tfstate
+*.tfvars
+.env
+node_modules/
+container/root/.kube
+config
+stage4/local-path-provisioner*
+
+.DS_Store

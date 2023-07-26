@@ -1,0 +1,207 @@
+# Default values for nvm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+ingress:
+  host: nvm-boilerplate.local
+  className: nginx
+  tls:
+    enabled: false
+    secretName: nvm-tls
+  annotations: {}
+
+environment: minikube
+
+migration:
+  image:
+    repository: chrisleekr/nodejs-vuejs-mysql-boilerplate
+    version: api-latest
+  env:
+    DB_CONNECTION_LIMIT: 10
+    DB_DEBUG: "true"
+  secretEnv:
+    DB_HOST:
+      secretKeyRef:
+        name: "nvm-secret"
+        key: "db-host"
+    DB_PORT:
+      secretKeyRef:
+        name: "nvm-secret"
+        key: "db-port"
+    DB_NAME:
+      secretKeyRef:
+        name: "nvm-secret"
+        key: "db-name"
+    DB_USER:
+      secretKeyRef:
+        name: "nvm-secret"
+        key: "db-user"
+    DB_PASSWORD:
+      secretKeyRef:
+        name: "nvm-secret"
+        key: "db-password"
+
+apps:
+  api:
+    name: api
+    image:
+      repository: chrisleekr/nodejs-vuejs-mysql-boilerplate
+      version: api-latest
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    containerPort: 3000
+    resources:
+      limits:
+        memory: 256Mi
+        cpu: 256m
+    ingress:
+      path: /api(.*)
+      rewriteTarget: $1
+      configurationSnippet: |
+        rewrite ^(/api)$ $1/ redirect;
+    probes:
+      initialDelaySeconds: 10
+      periodSeconds: 30
+      path: /
+      port: 3000
+    env:
+      DB_CONNECTION_LIMIT: 100
+      DB_DEBUG: true
+      JWT_EXPIRES_IN: "1w"
+      BCRYPT_SALTING_ROUND: 10
+      API_URL: "http://nvm-boilerplate.local/api"
+      BACKEND_URL: "http://backend.nvm-boilerplate.local/"
+      FRONTEND_URL: "http://frontend-nuxt.nvm-boilerplate.local/"
+      EMAIL_FROM_ADDRESS: "support@nvm-boilerplate.local"
+      EMAIL_FROM_NAME: "Support"
+      SMTP_HOST: "mailhog.nvm"
+      SMTP_PORT: 1025
+      SMTP_SECURE: "false"
+      SMTP_AUTH_USER: ""
+      SMTP_AUTH_PASS: ""
+      SMTP_DEBUG: "true"
+      SMTP_LOGGER: "true"
+      TZ: "Australia/Melbourne"
+    secretEnv:
+      DB_HOST:
+        secretKeyRef:
+          name: "nvm-secret"
+          key: "db-host"
+      DB_PORT:
+        secretKeyRef:
+          name: "nvm-secret"
+          key: "db-port"
+      DB_NAME:
+        secretKeyRef:
+          name: "nvm-secret"
+          key: "db-name"
+      DB_USER:
+        secretKeyRef:
+          name: "nvm-secret"
+          key: "db-user"
+      DB_PASSWORD:
+        secretKeyRef:
+          name: "nvm-secret"
+          key: "db-password"
+      JWT_SECRET_KEY:
+        secretKeyRef:
+          name: "nvm-secret"
+          key: "jwt-secret-key"
+      JWT_REFRESH_SECRET_KEY:
+        secretKeyRef:
+          name: "nvm-secret"
+          key: "jwt-refresh-secret-key"
+  frontendVue:
+    name: frontend-vue
+    image:
+      repository: chrisleekr/nodejs-vuejs-mysql-boilerplate
+      version: frontend-vue-latest
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    containerPort: 80
+    resources:
+      limits:
+        memory: 128Mi
+        cpu: 64m
+    ingress:
+      path: /frontend-vue(.*)
+      rewriteTarget: $1
+      configurationSnippet: |
+        rewrite ^(/frontend-vue)$ $1/ redirect;
+    probes:
+      initialDelaySeconds: 10
+      periodSeconds: 30
+      path: /frontend-vue/
+      port: 80
+    env:
+      BASE_URL: "/frontend-vue/"
+      API_URL: "http://nvm-boilerplate.local/api"
+  backend:
+    name: backend
+    image:
+      repository: chrisleekr/nodejs-vuejs-mysql-boilerplate
+      version: backend-latest
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    containerPort: 80
+    resources:
+      limits:
+        memory: 128Mi
+        cpu: 64m
+    ingress:
+      path: /backend(.*)
+      rewriteTarget: $1
+      configurationSnippet: |
+        rewrite ^(/backend)$ $1/ redirect;
+    probes:
+      initialDelaySeconds: 10
+      periodSeconds: 30
+      path: /backend/
+      port: 80
+    env:
+      API_URL: "http://nvm-boilerplate.local/api"
+  mailhog:
+    name: mailhog
+    image:
+      repository: mailhog/mailhog
+      version: latest
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    containerPort: 8025
+    resources:
+      limits:
+        memory: 128Mi
+        cpu: 64m
+    ingress:
+      path: /mailhog(.*)
+      rewriteTarget: $1
+      configurationSnippet: |
+        rewrite ^(/mailhog)$ $1/ redirect;
+    probes:
+      initialDelaySeconds: 10
+      periodSeconds: 30
+      path: /
+      port: 8025
+
+secrets:
+  dbHost:
+    key: "db-host"
+    value: "mysql-innodbcluster.mysql.svc.cluster.local"
+  dbPort:
+    key: "db-port"
+    value: 6446
+  dbUser:
+    key: "db-user"
+    value: "boilerplate"
+  dbPassword:
+    key: "db-password"
+    value: "boilerplate-password"
+  dbName:
+    key: "db-name"
+    value: "boilerplate"
+  jwtSecretKey:
+    key: "jwt-secret-key"
+    value: ""
+  jwtRefreshSecretKey:
+    key: "jwt-refresh-secret-key"
+    value: ""

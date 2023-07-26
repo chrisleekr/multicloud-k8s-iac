@@ -1,0 +1,24 @@
+version: 1
+labels:
+  - label: "type: build ⚙️"
+    title: '^build(\(.+\))?:.*'
+  - label: "type: ci ⚙️"
+    title: '^ci(\(.+\))?:.*'
+  - label: "type: chore 🧹"
+    title: '^chore(\(.+\))?:.*'
+  - label: "type: docs 📝"
+    title: '^docs(\(.+\))?:.*'
+  - label: "type: feat ✨"
+    title: '^feat(\(.+\))?:.*'
+  - label: "type: fix 🐛"
+    title: '^fix(\(.+\))?:.*'
+  - label: "type: perf 🚀"
+    title: '^perf(\(.+\))?:.*'
+  - label: "type: refactor 🔨"
+    title: '^refactor(\(.+\))?:.*'
+  - label: "type: revert ⏪️"
+    title: '^revert(\(.+\))?:.*'
+  - label: "type: style 🎨"
+    title: '^style(\(.+\))?:.*'
+  - label: "type: test 🧪"
+    title: '^test(\(.+\))?:.*'

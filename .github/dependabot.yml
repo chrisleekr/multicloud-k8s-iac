@@ -1,0 +1,30 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      day: "monday"
+      interval: "monthly"
+      time: "09:00"
+      timezone: "Australia/Melbourne"
+  - package-ecosystem: "pip"
+    directory: "/stage1"
+    schedule:
+      day: "monday"
+      interval: "monthly"
+      time: "09:00"
+      timezone: "Australia/Melbourne"
+  - package-ecosystem: "terraform"
+    directory: "/stage2"
+    schedule:
+      day: "monday"
+      interval: "monthly"
+      time: "09:00"
+      timezone: "Australia/Melbourne"
+  - package-ecosystem: "pip"
+    directory: "/stage3"
+    schedule:
+      day: "monday"
+      interval: "monthly"
+      time: "09:00"
+      timezone: "Australia/Melbourne"
