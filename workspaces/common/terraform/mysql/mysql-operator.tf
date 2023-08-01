@@ -12,7 +12,7 @@ resource "helm_release" "mysql_operator" {
   name       = "mysql-operator"
   repository = "https://mysql.github.io/mysql-operator"
   chart      = "mysql-operator"
-  version    = "2.0.10"
+  version    = "2.1.0"
   namespace  = "mysql-operator"
   timeout    = 360
 }

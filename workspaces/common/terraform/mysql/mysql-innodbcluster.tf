@@ -20,7 +20,7 @@ resource "helm_release" "mysql_innodbcluster" {
   name       = "mysql-innodbcluster"
   repository = "https://mysql.github.io/mysql-operator"
   chart      = "mysql-innodbcluster"
-  version    = "2.0.10"
+  version    = "2.1.0"
   namespace  = "mysql"
   timeout    = 360
 

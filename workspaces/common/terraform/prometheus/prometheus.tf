@@ -37,6 +37,7 @@ resource "helm_release" "prometheus_operator" {
       ingress:
         enabled: "true"
         path: /grafana
+        ingressClassName: ${var.ingress_class_name}
         hosts:
           - ${var.domain}
         tls: []

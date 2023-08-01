@@ -3,14 +3,21 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
+    {{- if eq $.Values.ingress.className "kong" }}
+    konghq.com/preserve-host: "true"
+    konghq.com/host-aliases: "{{ $.Values.ingress.host }}"
+    # konghq.com/plugins: "correlation-id"
+    {{- end }}
+    {{- if eq $.Values.ingress.className "nginx" }}
     nginx.ingress.kubernetes.io/app-root: /frontend-vue
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
+    {{- end }}
     {{- if $.Values.ingress.annotations }}
 {{- range $key, $value := $.Values.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
 {{- end }}
     {{- end }}
-  name: ingress-app-root
+  name: ingress-root
   namespace: {{ $.Release.Namespace }}
 spec:
   ingressClassName: {{ $.Values.ingress.className }}

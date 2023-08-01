@@ -1,0 +1,20 @@
+replicaCount: 3
+
+autoscaling:
+  enabled: true
+
+admin:
+  enabled: true
+  http:
+    enabled: true
+    servicePort: 8001
+    containerPort: 8001
+  ingress:
+    enabled: false
+    ingressClassName: kong
+    hostname: ${hostname}
+    path: /kong
+    pathType: ImplementationSpecific
+
+ingressController:
+  enabled: true

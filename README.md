@@ -14,8 +14,18 @@ Before getting started, please ensure that you have the following software insta
 
 This project includes the following features:
 
-- Sample Terraform scripts for deploying to Google Kubernetes Engine or Minikube
-- Sample Helm charts for deploying multiple containerized microservices
+- Terraform for deploying to `Google Kubernetes Engine` or `Minikube`
+  - Google Kubernetes Engine
+  - Kubernetes Nginx Ingress Controller
+  - Kong Ingress Controller - DB-less
+  - Cert Manager
+  - MySQL InnoDBCluster
+  - Prometheus/Grafana
+- Helm charts for deploying multiple containerized microservices
+- (WIP) CI/CD to build/lint/deploy infrastructure
+  - Gitlab
+  - Github Actions
+- Various bash scripts to deploy cluster
 
 ## Provision a cluster with Google Kubernetes Engine (GKE)
 
@@ -69,15 +79,24 @@ To provision a cluster with Minikube, follow these steps:
 1. Start Minikube by running the following command:
 
    ```bash
-   minikube start --addons ingress,metrics-server
+   minikube start --addons metrics-server
    ```
 
    Wait until the Minikube cluster is provisioned.
+
+   And open another terminal to make a tunnel for Load Balancer
+
+   ```bash
+   minikube tunnel
+   ```
 
 2. Launch the orchestrator by running the following command:
 
    ```bash
    npm run docker:exec
+
+   # install docker
+   apk add --no-cache docker
    ```
 
 3. Make the orchestrator accessible to the Minikube cluster by running the following script:
@@ -101,14 +120,6 @@ To provision a cluster with Minikube, follow these steps:
    vim /etc/hosts
    127.0.0.1   nvm-boilerplate.local
    ```
-
-   Then, port-forward the nginx service to your host machine by running the following command:
-
-   ```bash
-   kubectl port-forward -ningress-nginx svc/ingress-nginx-controller 80:80
-   ```
-
-   You may need root permission, so use `sudo` if required.
 
 6. Open a new browser and navigate to [nvm-boilerplate.local](http://nvm-boilerplate.local)
 
@@ -180,3 +191,4 @@ With the password, you can log in to Grafana using `admin`/`<Password>`.
 - [x] Expose MySQL write node for migration to avoid api migration failure
 - [x] Replaced presslab/mysql-operator to Oracle MySQL operator/InnoDB cluster
 - [x] Support Google Kubernetes Engine
+- [ ] Support Kong ingress controller

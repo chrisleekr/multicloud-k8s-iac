@@ -48,17 +48,21 @@ apps:
       repository: chrisleekr/nodejs-vuejs-mysql-boilerplate
       version: api-latest
       pullPolicy: IfNotPresent
-    replicaCount: 1
+    replicaCount: 2
     containerPort: 3000
     resources:
       limits:
         memory: 256Mi
         cpu: 256m
     ingress:
-      path: /api(.*)
-      rewriteTarget: $1
-      configurationSnippet: |
-        rewrite ^(/api)$ $1/ redirect;
+      kong:
+        path: /api
+        stripPath: true
+      nginx:
+        path: /api(.*)
+        rewriteTarget: $1
+        configurationSnippet: |
+          rewrite ^(/api)$ $1/ redirect;
     probes:
       initialDelaySeconds: 10
       periodSeconds: 30
@@ -124,10 +128,14 @@ apps:
         memory: 128Mi
         cpu: 64m
     ingress:
-      path: /frontend-vue(.*)
-      rewriteTarget: $1
-      configurationSnippet: |
-        rewrite ^(/frontend-vue)$ $1/ redirect;
+      kong:
+        path: /frontend-vue
+        stripPath: true
+      nginx:
+        path: /frontend-vue(.*)
+        rewriteTarget: $1
+        configurationSnippet: |
+          rewrite ^(/frontend-vue)$ $1/ redirect;
     probes:
       initialDelaySeconds: 10
       periodSeconds: 30
@@ -149,10 +157,14 @@ apps:
         memory: 128Mi
         cpu: 64m
     ingress:
-      path: /backend(.*)
-      rewriteTarget: $1
-      configurationSnippet: |
-        rewrite ^(/backend)$ $1/ redirect;
+      kong:
+        path: /backend
+        stripPath: true
+      nginx:
+        path: /backend(.*)
+        rewriteTarget: $1
+        configurationSnippet: |
+          rewrite ^(/backend)$ $1/ redirect;
     probes:
       initialDelaySeconds: 10
       periodSeconds: 30
@@ -173,15 +185,21 @@ apps:
         memory: 128Mi
         cpu: 64m
     ingress:
-      path: /mailhog(.*)
-      rewriteTarget: $1
-      configurationSnippet: |
-        rewrite ^(/mailhog)$ $1/ redirect;
+      kong:
+        path: /mailhog
+        stripPath: false
+      nginx:
+        path: /mailhog(.*)
+        rewriteTarget: $1
+        configurationSnippet: |
+          rewrite ^(/mailhog)$ $1/ redirect;
     probes:
       initialDelaySeconds: 10
       periodSeconds: 30
-      path: /
+      path: /mailhog
       port: 8025
+    env:
+      MH_UI_WEB_PATH: mailhog
 
 secrets:
   dbHost:

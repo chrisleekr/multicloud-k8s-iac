@@ -6,11 +6,14 @@ module "nvm" {
   source = "../../common/terraform/nvm"
 
   depends_on = [
-    module.mysql
+    module.mysql,
+    helm_release.kong
   ]
 
   domain   = var.domain
   protocol = var.protocol
+
+  ingress_class_name = "kong"
 
   mysql_boilerplate_password = module.mysql.mysql_boilerplate_password
 }
@@ -24,4 +27,6 @@ module "prometheus" {
 
   domain   = var.domain
   protocol = var.protocol
+
+  ingress_class_name = "kong"
 }

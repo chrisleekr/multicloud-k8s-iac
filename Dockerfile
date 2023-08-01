@@ -60,7 +60,7 @@ RUN set -eux; \
 RUN apk add --no-cache \
     openssh=9.3_p2-r0 \
     gcompat=1.1.0-r1 \
-    libc6-compat=1.2.4-r0 \
+    libc6-compat=1.2.4-r1 \
     iptables=1.8.9-r2 \
     conntrack-tools=1.4.7-r1 \
     && \
