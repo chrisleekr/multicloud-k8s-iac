@@ -1,6 +1,8 @@
-# Kubernetes sample project for Node.js (REST API) + Vue.js (Frontend/Backend) + MySQL Boilerplate
+# Sample Kubernetes project for Multicloud
 
-This project provides an example of Infrastructure as Code (IaC) for deploying the [NVM boilerplate](https://github.com/chrisleekr/nodejs-vuejs-mysql-boilerplate) to Google Kubernetes Engine (GKE) or Minikube. Please note that this is a sample project and is not intended for production use.
+> Infrastructure as Code (IaC) for Google Kubernetes Engine (GKE) or Minikube
+
+This project demonstrates an implementation of Infrastructure as Code (IaC) for deploying microservices using the [NVM boilerplate](https://github.com/chrisleekr/nodejs-vuejs-mysql-boilerplate) to either Google Kubernetes Engine (GKE) or Minikube, accomplished through Terraform/Helm. Please keep in mind that this is a sample project and is not suitable for production environments.
 
 ## Prerequisites
 
@@ -14,7 +16,7 @@ Before getting started, please ensure that you have the following software insta
 
 This project includes the following features:
 
-- Terraform for deploying to `Google Kubernetes Engine` or `Minikube`
+- Terraform for deploying to `Google Kubernetes Engine` or `Minikube`:
   - Google Kubernetes Engine
   - Kubernetes Nginx Ingress Controller
   - Kong Ingress Controller - DB-less
@@ -22,10 +24,10 @@ This project includes the following features:
   - MySQL InnoDBCluster
   - Prometheus/Grafana
 - Helm charts for deploying multiple containerized microservices
-- (WIP) CI/CD to build/lint/deploy infrastructure
+- (WIP) CI/CD to build/lint/deploy infrastructure:
   - Gitlab
   - Github Actions
-- Various bash scripts to deploy cluster
+- Various bash scripts to deploy the cluster
 
 ## Provision a cluster with Google Kubernetes Engine (GKE)
 
@@ -159,7 +161,7 @@ minikube addons enable metrics-server
 
 ## Monitoring with Prometheus & Grafana
 
-You can access Grafana via `<http://nvm-boilerplate.local/grafana` when using Minikube.
+You can access Grafana via `http://nvm-boilerplate.local/grafana` when using Minikube.
 
 After the deployment is completed, you will see output similar to the following:
 
@@ -182,6 +184,8 @@ terraform output grafana_admin_password
 With the password, you can log in to Grafana using `admin`/`<Password>`.
 
 ![image](https://user-images.githubusercontent.com/5715919/100513860-4a031880-31c4-11eb-8ef2-04202055aa78.png)
+
+In addition, you can access Prometheus `http://nvm-boilerplate.local/prometheus` in Minikube.
 
 ## Todo
 

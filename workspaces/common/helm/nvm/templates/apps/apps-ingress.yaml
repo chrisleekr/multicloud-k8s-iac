@@ -7,7 +7,7 @@ metadata:
     {{- if eq $.Values.ingress.className "kong" }}
     konghq.com/preserve-host: "true"
     konghq.com/host-aliases: "{{ $.Values.ingress.host }}"
-    # konghq.com/plugins: "correlation-id"
+    konghq.com/plugins: "correlation-id"
     {{- if .ingress.kong.stripPath }}
     konghq.com/strip-path: "true"
     {{- end }}

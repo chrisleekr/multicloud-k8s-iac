@@ -21,6 +21,11 @@ terraform {
       source  = "hashicorp/null"
       version = ">= 3.2.1"
     }
+
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = "~> 1.14.0"
+    }
   }
 }
 
@@ -35,4 +40,9 @@ provider "helm" {
     config_path    = "~/.kube/config"
     config_context = "minikube"
   }
+}
+
+provider "kubectl" {
+  config_path    = "~/.kube/config"
+  config_context = "minikube"
 }
