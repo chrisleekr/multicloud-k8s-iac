@@ -18,8 +18,5 @@ log "Updating the Kubernetes context..."
 minikube update-context
 sed -i 's/127.0.0.1/control-plane.minikube.internal/g' ~/.kube/config
 
-# TF_VAR_loadbalancer_ip=$(minikube ip --skip-audit)
-# export TF_VAR_loadbalancer_ip
-
 log "Done."
 kubectl get nodes
