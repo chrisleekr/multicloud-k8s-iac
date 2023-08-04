@@ -16,5 +16,7 @@ module "project" {
   protocol = var.protocol
   domain   = var.domain
 
+  ingress_class_name = var.ingress_class_name
+
   load_balancer_ip_address = module.cluster.load_balancer_ip_address
 }

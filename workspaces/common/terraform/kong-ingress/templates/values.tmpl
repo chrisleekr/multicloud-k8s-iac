@@ -23,3 +23,12 @@ serviceMonitor:
   enabled: true
   labels:
     release: kube-prometheus-stack
+
+proxy:
+  enabled: true
+  externalIPs:
+    - ${load_balancer_ip_address}
+
+certificates:
+  enabled: ${certificate_enabled}
+  issuer: ${certificate_issuer}

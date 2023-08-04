@@ -7,4 +7,6 @@ module "prometheus" {
 
   domain   = var.domain
   protocol = var.protocol
+
+  ingress_class_name = var.ingress_class_name
 }

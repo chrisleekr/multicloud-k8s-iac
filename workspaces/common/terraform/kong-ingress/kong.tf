@@ -21,7 +21,10 @@ resource "helm_release" "kong" {
       "${path.module}/templates/values.tmpl",
       {
 
-        hostname = var.domain
+        hostname                 = var.domain
+        certificate_enabled      = var.certificate_enabled
+        certificate_issuer       = var.certificate_issuer
+        load_balancer_ip_address = var.load_balancer_ip_address
       }
     )
   ]

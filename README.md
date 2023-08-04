@@ -1,6 +1,6 @@
 # Sample Kubernetes project for Multicloud
 
-> Infrastructure as Code (IaC) for Google Kubernetes Engine (GKE) or Minikube
+> Infrastructure as Code (IaC) for Google Kubernetes Engine (GKE) or Minikube using Terraform/Helm
 
 This project demonstrates an implementation of Infrastructure as Code (IaC) for deploying microservices using the [NVM boilerplate](https://github.com/chrisleekr/nodejs-vuejs-mysql-boilerplate) to either Google Kubernetes Engine (GKE) or Minikube, accomplished through Terraform/Helm. Please keep in mind that this is a sample project and is not suitable for production environments.
 
@@ -49,8 +49,10 @@ To provision a cluster with GKE, follow these steps:
 
    ```bash
    cd workspaces/google/terraform/
+   terraform init
    terraform workspace list
-   terraform workspace select sample-gke-iac
+   terraform workspace new gke-iac # if required
+   terraform workspace select gke-iac
    terraform init
    terraform plan
    terraform apply
@@ -117,6 +119,10 @@ To provision a cluster with Minikube, follow these steps:
 
    ```bash
    cd /srv/workspaces/minikube/terraform
+   terraform init
+   terraform workspace list
+   terraform workspace new minikube-iac # if required
+   terraform workspace select minikube-iac
    terraform init
    terraform plan
    terraform apply

@@ -23,7 +23,6 @@ variable "mysql_boilerplate_password" {
 variable "ingress_class_name" {
   description = "Ingress class name"
   type        = string
-  default     = "nginx"
 }
 
 variable "ingress_tls_enabled" {
