@@ -25,7 +25,7 @@ RUN set -eux; \
     ca-certificates=20230506-r0 \
     curl=8.2.1-r0 \
     bash=5.2.15-r5 \
-    yq=4.33.3-r1 \
+    yq=4.33.3-r2 \
     jq=1.6-r3 \
     git=2.40.1-r0 \
     python3=3.11.4-r0 \

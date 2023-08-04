@@ -89,7 +89,13 @@ To provision a cluster with Minikube, follow these steps:
    And open another terminal to make a tunnel for Load Balancer
 
    ```bash
-   minikube tunnel
+   sudo minikube tunnel
+   ```
+
+   If wants nginx ingress controller, then enable Minikube ingress.
+
+   ```bash
+   minikube addons enable ingress
    ```
 
 2. Launch the orchestrator by running the following command:
