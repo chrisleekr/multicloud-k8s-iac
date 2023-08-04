@@ -1,0 +1,13 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: app-root-termination
+  namespace: nvm
+  annotations:
+    kubernetes.io/ingress.class: kong
+plugin: request-termination
+config:
+  status_code: 301
+  content_type: "text/html; charset=UTF-8"
+  body: "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\"> <html><head> <title>301 Moved Permanently</title> </head><body> <h1>Moved Permanently</h1> <p>The document has moved <a href=\"${protocol}://${domain}/frontend-vue\">here</a>.</p> <hr> </body></html>"
+

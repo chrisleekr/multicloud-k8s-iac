@@ -6,9 +6,7 @@ metadata:
     {{- if eq $.Values.ingress.className "kong" }}
     konghq.com/preserve-host: "true"
     konghq.com/host-aliases: "{{ $.Values.ingress.host }}"
-    konghq.com/plugins: "correlation-id"
-    konghq.com/strip-path: "true"
-    konghq.com/path: "/frontend-vue"
+    konghq.com/plugins: "correlation-id,app-root-response-transform,app-root-termination"
     {{- end }}
     {{- if eq $.Values.ingress.className "nginx" }}
     nginx.ingress.kubernetes.io/app-root: /frontend-vue

@@ -20,6 +20,7 @@ resource "helm_release" "kong" {
     templatefile(
       "${path.module}/kong-ingress/values.tmpl",
       {
+
         hostname = var.domain
       }
     )
@@ -30,6 +31,14 @@ resource "helm_release" "kong" {
 locals {
   kong_correlation_id = templatefile("${path.module}/kong-ingress/correlation-id.tmpl", {})
   kong_prometheus     = templatefile("${path.module}/kong-ingress/prometheus.tmpl", {})
+  kong_app_root_response_transfomer = templatefile("${path.module}/kong-ingress/app-root-response-transformer.tmpl", {
+    protocol = var.protocol
+    domain   = var.domain
+  })
+  kong_app_root_termination = templatefile("${path.module}/kong-ingress/app-root-termination.tmpl", {
+    protocol = var.protocol
+    domain   = var.domain
+  })
 }
 
 resource "kubectl_manifest" "kong_correlation_id" {
@@ -46,4 +55,23 @@ resource "kubectl_manifest" "kong_prometheus" {
     helm_release.kong
   ]
   yaml_body = local.kong_prometheus
+}
+
+
+resource "kubectl_manifest" "kong_app_root_response_transfomer" {
+  depends_on = [
+    kubernetes_namespace.kong_namespace,
+    helm_release.kong,
+    module.nvm
+  ]
+  yaml_body = local.kong_app_root_response_transfomer
+}
+
+resource "kubectl_manifest" "kong_app_root_termination" {
+  depends_on = [
+    kubernetes_namespace.kong_namespace,
+    helm_release.kong,
+    module.nvm
+  ]
+  yaml_body = local.kong_app_root_termination
 }

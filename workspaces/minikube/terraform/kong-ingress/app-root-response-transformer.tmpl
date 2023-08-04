@@ -1,0 +1,12 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: app-root-response-transform
+  namespace: nvm
+  annotations:
+    kubernetes.io/ingress.class: kong
+plugin: response-transformer
+config:
+  add:
+    headers:
+    - "Location: ${protocol}://${domain}/frontend-vue"
