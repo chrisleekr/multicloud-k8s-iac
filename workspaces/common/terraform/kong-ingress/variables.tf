@@ -12,8 +12,3 @@ variable "load_balancer_ip_address" {
   description = "Load Balancer IP Address"
   type        = string
 }
-
-variable "ingress_class_name" {
-  description = "Ingress type"
-  type        = string
-}

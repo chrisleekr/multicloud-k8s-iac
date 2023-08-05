@@ -1,0 +1,13 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongClusterPlugin
+metadata:
+  name: correlation-id
+  annotations:
+    kubernetes.io/ingress.class: kong
+  labels:
+    global: "true"
+plugin: correlation-id
+config:
+  header_name: X-Request-ID
+  generator: uuid#counter
+  echo_downstream: true

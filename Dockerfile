@@ -25,7 +25,7 @@ RUN set -eux; \
     ca-certificates=20230506-r0 \
     curl=8.2.1-r0 \
     bash=5.2.15-r5 \
-    yq=4.33.3-r1 \
+    yq=4.33.3-r2 \
     jq=1.6-r3 \
     git=2.40.1-r0 \
     python3=3.11.4-r0 \
@@ -60,7 +60,7 @@ RUN set -eux; \
 RUN apk add --no-cache \
     openssh=9.3_p2-r0 \
     gcompat=1.1.0-r1 \
-    libc6-compat=1.2.4-r0 \
+    libc6-compat=1.2.4-r1 \
     iptables=1.8.9-r2 \
     conntrack-tools=1.4.7-r1 \
     && \

@@ -4,13 +4,23 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: {{ .ingress.rewriteTarget }}
-    {{- if .ingress.configurationSnippet }}
+    {{- if eq $.Values.ingress.className "kong" }}
+    konghq.com/preserve-host: "true"
+    konghq.com/host-aliases: "{{ $.Values.ingress.host }}"
+    konghq.com/plugins: "correlation-id"
+    {{- if .ingress.kong.stripPath }}
+    konghq.com/strip-path: "true"
+    {{- end }}
+    {{- end }}
+    {{- if eq $.Values.ingress.className "nginx" }}
+    nginx.ingress.kubernetes.io/rewrite-target: {{ .ingress.nginx.rewriteTarget }}
+    {{- if .ingress.nginx.configurationSnippet }}
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      {{ .ingress.configurationSnippet }}
+      {{ .ingress.nginx.configurationSnippet }}
     {{- end }}
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/enable-rewrite-log: "true"
+    {{- end }}
     {{- if $.Values.ingress.annotations }}
 {{- range $key, $value := $.Values.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
@@ -30,7 +40,7 @@ spec:
     - host: "{{ $.Values.ingress.host }}"
       http:
         paths:
-          - path: {{ .ingress.path }}
+          - path: {{ if eq $.Values.ingress.className "nginx" }}{{ .ingress.nginx.path }}{{ else if eq $.Values.ingress.className "kong" }}{{ .ingress.kong.path }}{{ end }}
             pathType: ImplementationSpecific
             backend:
               service:

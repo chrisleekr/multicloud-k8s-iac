@@ -4,6 +4,7 @@ set -e
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 PROJECT_DIR=$(realpath "$SCRIPT_DIR/..")
+REGISTRY_DOMAIN=${REGISTRY_DOMAIN:-"registry.hub.docker.com"}
 
 # shellcheck source=common-func.sh
 source "$SCRIPT_DIR/common-func.sh"

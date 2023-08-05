@@ -24,3 +24,10 @@ variable "domain" {
   description = "Domain Name"
   default     = "nvm.chrislee.kr"
 }
+
+variable "ingress_class_name" {
+  description = "Ingress type"
+  type        = string
+  default     = "nginx"
+}
+
