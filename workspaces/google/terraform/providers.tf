@@ -66,5 +66,6 @@ provider "kubectl" {
   cluster_ca_certificate = base64decode(
     module.cluster.kubernetes_cluster_ca_certificate
   )
+  load_config_file = false
 }
 

@@ -7,7 +7,7 @@ resource "helm_release" "cert_manager" {
   repository = "https://charts.jetstack.io"
   chart      = "cert-manager"
   version    = "1.12.2"
-  namespace  = kubernetes_namespace.ingress[0].metadata[0].name
+  namespace  = kubernetes_namespace.ingress.metadata[0].name
 
   set {
     name  = "installCRDs"

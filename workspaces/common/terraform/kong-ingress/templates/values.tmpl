@@ -26,9 +26,6 @@ serviceMonitor:
 
 proxy:
   enabled: true
-  externalIPs:
-    - ${load_balancer_ip_address}
-
-certificates:
-  enabled: ${certificate_enabled}
-  issuer: ${certificate_issuer}
+  %{ if load_balancer_ip_address != "" }
+  loadBalancerIP: ${load_balancer_ip_address}
+  %{ endif }

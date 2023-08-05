@@ -6,7 +6,5 @@ module "kong_ingress" {
   domain   = var.domain
   protocol = var.protocol
 
-  certificate_enabled      = true
-  certificate_issuer       = "letsencrypt"
   load_balancer_ip_address = var.load_balancer_ip_address
 }
