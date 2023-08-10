@@ -1,5 +1,5 @@
 {
-  "name": "k8s-nodejs-vuejs-mysql-boilerplate",
+  "name": "multicloud-k8s-iac",
   "version": "1.0.0",
   "description": "Provisioning Kubernetes on Minikube/GKE with Terraform",
   "keywords": [
@@ -10,7 +10,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate.git"
+    "url": "https://github.com/chrisleekr/multicloud-k8s-iac.git"
   },
   "scripts": {
     "prepare": "husky install",
@@ -18,16 +18,16 @@
     "lint:gcp": "tflint gcp",
     "docker:build": "./scripts/docker-build.sh",
     "docker:run": "./scripts/docker-run.sh",
-    "docker:shell": "docker exec -it \"k8s-nodejs-vuejs-mysql-boilerplate\" /bin/bash",
+    "docker:shell": "docker exec -it \"multicloud-k8s-iac\" /bin/bash",
     "docker:exec": "npm run docker:run && npm run docker:shell"
   },
   "author": "Chris Lee <git@chrislee.kr>",
   "license": "UNLICENSED",
   "private": true,
   "bugs": {
-    "url": "https://github.com/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate/issues"
+    "url": "https://github.com/chrisleekr/multicloud-k8s-iac/issues"
   },
-  "homepage": "https://github.com/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate#readme",
+  "homepage": "https://github.com/chrisleekr/multicloud-k8s-iac#readme",
   "devDependencies": {
     "@commitlint/cli": "^17.6.6",
     "@commitlint/config-conventional": "^17.6.6",

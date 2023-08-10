@@ -207,4 +207,4 @@ In addition, you can access Prometheus `http://nvm-boilerplate.local/prometheus`
 - [x] Expose MySQL write node for migration to avoid api migration failure
 - [x] Replaced presslab/mysql-operator to Oracle MySQL operator/InnoDB cluster
 - [x] Support Google Kubernetes Engine
-- [ ] Support Kong ingress controller
+- [x] Support Kong ingress controller

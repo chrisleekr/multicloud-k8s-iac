@@ -17,23 +17,20 @@ build:
   interruptible: true
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker pull
-      "$REGISTRY_DOMAIN/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate:cache" ||
-      true
+    - docker pull "$REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:cache" || true
     - >
       docker buildx build . --pull
-      --cache-from=$REGISTRY_DOMAIN/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate:cache
+      --cache-from=$REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:cache
       --progress plain -t
-      $REGISTRY_DOMAIN/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate:build-$CI_COMMIT_SHORT_SHA
-      -t $REGISTRY_DOMAIN/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate:cache
+      $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
+      -t $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:cache
+    - docker push $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:cache
     - docker push
-      $REGISTRY_DOMAIN/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate:cache
-    - docker push
-      $REGISTRY_DOMAIN/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate:build-$CI_COMMIT_SHORT_SHA
+      $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
 
 lint-helm:
   stage: test
-  image: $REGISTRY_DOMAIN/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate:build-$CI_COMMIT_SHORT_SHA
+  image: $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
   interruptible: true
   artifacts:
     paths:
@@ -45,13 +42,13 @@ lint-helm:
 
 lint-terraform:
   stage: test
-  image: $REGISTRY_DOMAIN/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate:build-$CI_COMMIT_SHORT_SHA
+  image: $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
   interruptible: true
   script:
     - ./scripts/validate-terraform.sh
 # deploy-minikube:
 #   stage: deploy
-#   image: $REGISTRY_DOMAIN/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate:build-$CI_COMMIT_SHORT_SHA
+#   image: $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
 #   script:
 #     - apk --no-cache add docker sudo findutils openrc
 #     - sudo service docker stop || true
@@ -83,5 +80,4 @@ production:
   script:
     - docker buildx build --progress plain --platform
       linux/amd64,linux/arm/v7,linux/arm64 --pull --tag
-      $REGISTRY_DOMAIN/chrisleekr/k8s-nodejs-vuejs-mysql-boilerplate:latest
-      --push .
+      $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:latest --push .
