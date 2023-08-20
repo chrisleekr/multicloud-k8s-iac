@@ -21,6 +21,7 @@ build:
     - >
       docker buildx build . --pull
       --cache-from=$REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:cache
+      --build-arg BUILDKIT_INLINE_CACHE=1
       --progress plain -t
       $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
       -t $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:cache
