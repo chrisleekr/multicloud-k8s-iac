@@ -1,10 +1,20 @@
 data "google_container_engine_versions" "versions" {
+  depends_on = [
+    google_project.project,
+    null_resource.wait_for_services_to_be_enabled
+  ]
+
   location = var.google_region
-  project  = var.google_project_id
+  project  = local.project_id
 }
 
 resource "google_container_cluster" "primary" {
-  name     = "${var.google_project_id}-gke"
+  depends_on = [
+    google_project.project,
+    null_resource.wait_for_services_to_be_enabled
+  ]
+  name     = "${local.project_id}-gke"
+  project  = local.project_id
   location = var.google_region
 
   remove_default_node_pool = true
@@ -12,9 +22,8 @@ resource "google_container_cluster" "primary" {
   network                  = google_compute_network.vpc.name
   subnetwork               = google_compute_subnetwork.private_subnet.name
 
-
-  logging_service    = "none"
-  monitoring_service = "none"
+  logging_service    = "logging.googleapis.com/kubernetes"
+  monitoring_service = "monitoring.googleapis.com/kubernetes"
 
   release_channel {
     channel = "STABLE"
@@ -41,7 +50,7 @@ resource "google_container_cluster" "primary" {
     }
 
     gcp_filestore_csi_driver_config {
-      enabled = false
+      enabled = true
     }
   }
 
@@ -51,13 +60,24 @@ resource "google_container_cluster" "primary" {
   }
 }
 
-
-resource "google_container_node_pool" "primary_preemptible_nodes" {
+resource "google_service_account" "gke_node_pool_sa" {
   depends_on = [
     google_container_cluster.primary
   ]
+  account_id   = "${local.project_id}-sa"
+  display_name = "Service Account"
+  project      = local.project_id
+}
 
-  name       = "${var.google_project_id}-gke-node-pool"
+resource "google_container_node_pool" "primary_preemptible_nodes" {
+  depends_on = [
+    google_container_cluster.primary,
+    google_service_account.gke_node_pool_sa
+
+  ]
+
+  name       = "${local.project_id}-gke-node-pool"
+  project    = local.project_id
   location   = var.google_region
   cluster    = google_container_cluster.primary.name
   node_count = 1
@@ -78,6 +98,8 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     preemptible  = true
     machine_type = "e2-medium"
 
+    service_account = google_service_account.gke_node_pool_sa.email
+
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
@@ -86,4 +108,16 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
       preemptible = "true"
     }
   }
+}
+
+# Set up logging bucket retention days to 3 days
+resource "google_logging_project_bucket_config" "logging_bucket" {
+  depends_on = [
+    google_container_cluster.primary,
+    google_container_node_pool.primary_preemptible_nodes
+  ]
+  project        = local.project_id
+  location       = "global"
+  bucket_id      = "_Default"
+  retention_days = 3
 }

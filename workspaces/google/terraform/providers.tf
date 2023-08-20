@@ -35,8 +35,8 @@ terraform {
 }
 
 provider "google" {
-  project = var.google_project_id
-  region  = var.google_region
+  region                = var.google_region
+  user_project_override = true
 }
 
 # Retrieve an access token as the Terraform runner

@@ -16,8 +16,6 @@ ARG TERRAFORM_VERSION=1.5.3
 # BUILDPLATFORM=linux/arm64/v8, BUILDARCH=arm64
 RUN echo "BUILDPLATFORM=$BUILDPLATFORM, BUILDARCH=$BUILDARCH"
 
-COPY container-files/ /
-
 # Install dependencies
 RUN set -eux; \
     \
@@ -98,7 +96,7 @@ RUN apk add --no-cache \
 ENV PATH /google-cloud-sdk/bin:$PATH
 RUN export GOOGLE_CLOUD_SDK_ARCH="x86_64"; \
     if [ "$BUILDARCH" = "arm64" ]; then \
-        export GOOGLE_CLOUD_SDK_ARCH="arm"; \
+    export GOOGLE_CLOUD_SDK_ARCH="arm"; \
     fi; \
     curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-${GOOGLE_CLOUD_SDK_VERSION}-linux-${GOOGLE_CLOUD_SDK_ARCH}.tar.gz && \
     tar xzf google-cloud-cli-${GOOGLE_CLOUD_SDK_VERSION}-linux-${GOOGLE_CLOUD_SDK_ARCH}.tar.gz && \
@@ -113,8 +111,7 @@ RUN export GOOGLE_CLOUD_SDK_ARCH="x86_64"; \
     google-cloud-sdk/bin/anthoscli \
     google-cloud-sdk/lib/googlecloudsdk/third_party/apis
 
-
-
+COPY container-files/ /
 
 WORKDIR /srv
 
