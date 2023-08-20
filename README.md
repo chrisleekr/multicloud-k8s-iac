@@ -40,9 +40,10 @@ To provision a cluster with GKE, follow these steps:
    ```
 
 2. Make the orchestrator accessible to the GKE cluster by running the following command:
+   Note that the orchestrator should've authenticate when launching the bash shell.
 
    ```bash
-   gcloud auth application-default login --no-launch-browser
+   gcloud auth list
    ```
 
 3. Run the Terraform commands by navigating to the appropriate directory and running the following commands:

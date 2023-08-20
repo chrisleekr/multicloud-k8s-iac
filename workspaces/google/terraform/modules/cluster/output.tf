@@ -1,3 +1,8 @@
+output "google_project_id" {
+  description = "Google project ID"
+  value       = google_project.project.id
+}
+
 output "kubernetes_cluster_name" {
   description = "GKE Cluster Name"
   value       = google_container_cluster.primary.name

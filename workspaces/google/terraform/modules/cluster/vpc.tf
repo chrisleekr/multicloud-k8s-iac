@@ -1,11 +1,22 @@
 resource "google_compute_network" "vpc" {
-  name                    = "${var.google_project_id}-vpc"
+  depends_on = [
+    google_project.project,
+    null_resource.wait_for_services_to_be_enabled
+  ]
+
+  name                    = "${local.project_id}-vpc"
+  project                 = local.project_id
   auto_create_subnetworks = "false"
   routing_mode            = "REGIONAL"
 }
 
 resource "google_compute_subnetwork" "private_subnet" {
-  name                     = "${var.google_project_id}-private-subnet"
+  depends_on = [
+    google_compute_network.vpc
+  ]
+
+  name                     = "${local.project_id}-private-subnet"
+  project                  = local.project_id
   network                  = google_compute_network.vpc.name
   ip_cidr_range            = "10.0.0.0/18"
   region                   = var.google_region
@@ -23,15 +34,26 @@ resource "google_compute_subnetwork" "private_subnet" {
 }
 
 resource "google_compute_router" "router" {
-  name    = "${var.google_project_id}-router"
+  depends_on = [
+    google_compute_network.vpc
+  ]
+
+  name    = "${local.project_id}-router"
+  project = local.project_id
   region  = var.google_region
   network = google_compute_network.vpc.id
 }
 
 resource "google_compute_router_nat" "nat" {
-  name   = "${var.google_project_id}-nat"
-  router = google_compute_router.router.name
-  region = var.google_region
+  depends_on = [
+    google_compute_router.router,
+    google_compute_address.nat_ip
+  ]
+
+  name    = "${local.project_id}-nat"
+  project = local.project_id
+  router  = google_compute_router.router.name
+  region  = var.google_region
 
   source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
   nat_ip_allocate_option             = "MANUAL_ONLY"
@@ -45,13 +67,23 @@ resource "google_compute_router_nat" "nat" {
 }
 
 resource "google_compute_address" "nat_ip" {
-  name         = "${var.google_project_id}-nat-ip"
+  depends_on = [
+    google_compute_network.vpc
+  ]
+
+  name         = "${local.project_id}-nat-ip"
+  project      = local.project_id
   address_type = "EXTERNAL"
   network_tier = "PREMIUM"
 }
 
 resource "google_compute_address" "load_balancer_ip" {
-  name         = "${var.google_project_id}-load-balancer-ip"
+  depends_on = [
+    google_compute_network.vpc
+  ]
+
+  name         = "${local.project_id}-load-balancer-ip"
+  project      = local.project_id
   address_type = "EXTERNAL"
   network_tier = "PREMIUM"
 }

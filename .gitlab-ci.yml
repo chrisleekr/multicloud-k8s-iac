@@ -79,5 +79,5 @@ production:
     - docker buildx create --driver docker-container --use dind
   script:
     - docker buildx build --progress plain --platform
-      linux/amd64,linux/arm/v7,linux/arm64 --pull --tag
+      linux/amd64,linux/arm64 --pull --tag
       $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:latest --push .

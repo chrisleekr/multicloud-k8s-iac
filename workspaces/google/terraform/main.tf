@@ -1,9 +1,10 @@
 module "cluster" {
   source = "./modules/cluster"
 
-  google_project_id   = var.google_project_id
-  google_region       = var.google_region
-  google_cluster_name = var.google_cluster_name
+  google_region             = var.google_region
+  google_org_id             = var.google_org_id
+  google_cluster_name       = var.google_cluster_name
+  google_billing_account_id = var.google_billing_account_id
 }
 
 module "project" {

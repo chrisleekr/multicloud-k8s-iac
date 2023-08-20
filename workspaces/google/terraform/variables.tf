@@ -1,7 +1,3 @@
-variable "google_project_id" {
-  description = "ID of the Google project"
-  type        = string
-}
 
 variable "google_region" {
   description = "Location of the GKE cluster"
@@ -9,10 +5,22 @@ variable "google_region" {
   default     = "australia-southeast2" # Melbourne
 }
 
+variable "google_billing_account_id" {
+  description = "Billing Account ID"
+  type        = string
+  default     = "012345-678910-123456"
+}
+
+variable "google_org_id" {
+  description = "Organization ID"
+  type        = string
+  default     = "1234567890"
+}
+
 variable "google_cluster_name" {
   description = "Name of the GKE cluster"
   type        = string
-  default     = "sample-cluster"
+  default     = "sample"
 }
 
 variable "protocol" {
