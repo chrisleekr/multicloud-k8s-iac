@@ -48,18 +48,18 @@ jobs:
       - name: Download Docker image
         uses: actions/download-artifact@v3
         with:
-          name: test-github-actions
+          name: multicloud-k8s-iac
 
       - name: Load Docker image
         run: |
-          docker load -i test-github-actions-$GITHUB_SHA.tar
+          docker load -i multicloud-k8s-iac-$GITHUB_SHA.tar
 
       - name: Lint Helm
         run: |
-          docker run --rm test-github-actions:$GITHUB_SHA \
+          docker run --rm multicloud-k8s-iac:$GITHUB_SHA \
           sh -c './scripts/validate-helm.sh'
 
       - name: Lint Terraform
         run: |
-          docker run --rm test-github-actions:$GITHUB_SHA \
+          docker run --rm multicloud-k8s-iac:$GITHUB_SHA \
           sh -c './scripts/validate-terraform.sh'
