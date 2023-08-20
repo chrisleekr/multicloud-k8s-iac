@@ -1,0 +1,65 @@
+name: Lint & Validate
+on:
+  - push
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      # https://github.com/docker/login-action#docker-hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build docker image
+        env:
+          BUILDPLATFORM: linux/amd64
+          BUILDARCH: amd64
+        run: |
+          docker pull chrisleekr/multicloud-k8s-iac:cache || true
+          docker build . \
+          --cache-from=chrisleekr/multicloud-k8s-iac:cache \
+          -t multicloud-k8s-iac:$GITHUB_SHA \
+          -t chrisleekr/multicloud-k8s-iac:cache
+          docker push chrisleekr/multicloud-k8s-iac:cache
+
+      - name: Save Docker image
+        run: |
+          docker save multicloud-k8s-iac:$GITHUB_SHA -o multicloud-k8s-iac-$GITHUB_SHA.tar
+
+      - name: Upload Docker image
+        uses: actions/upload-artifact@v3
+        with:
+          name: multicloud-k8s-iac
+          path: multicloud-k8s-iac-${{github.sha}}.tar
+          if-no-files-found: error
+          retention-days: 1
+
+  lint:
+    name: 'Lint'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download Docker image
+        uses: actions/download-artifact@v3
+        with:
+          name: multicloud-k8s-iac
+
+      - name: Load Docker image
+        run: |
+          docker load -i multicloud-k8s-iac-$GITHUB_SHA.tar
+
+      - name: Lint Helm
+        run: |
+          docker run --rm multicloud-k8s-iac:$GITHUB_SHA \
+          sh -c './scripts/validate-helm.sh'
+
+      - name: Lint Terraform
+        run: |
+          docker run --rm multicloud-k8s-iac:$GITHUB_SHA \
+          sh -c './scripts/validate-terraform.sh'

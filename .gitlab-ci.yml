@@ -46,19 +46,6 @@ lint-terraform:
   interruptible: true
   script:
     - ./scripts/validate-terraform.sh
-# deploy-minikube:
-#   stage: deploy
-#   image: $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
-#   script:
-#     - apk --no-cache add docker sudo findutils openrc
-#     - sudo service docker stop || true
-#     - mkdir -p /etc/docker
-#     - minikube start --driver=none --addons ingress,metrics-server --force
-#     - /srv/workspaces/minikube/scripts/set-kube-context.sh
-#     - cd /srv/workspaces/minikube/terraform
-#     - terraform init
-#     - terraform plan -out=minikube.plan
-#     - terraform apply -input=false -auto-approve minikube.plan
 
 production:
   stage: build production
