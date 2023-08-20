@@ -17,7 +17,6 @@ jobs:
           docker pull chrisleekr/multicloud-k8s-iac:cache || true
           docker build . \
           --cache-from=chrisleekr/multicloud-k8s-iac:cache \
-          --target dev-stage \
           -t multicloud-k8s-iac:$GITHUB_SHA \
           -t chrisleekr/multicloud-k8s-iac:cache
           docker push chrisleekr/multicloud-k8s-iac:cache
