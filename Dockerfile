@@ -5,9 +5,6 @@ ARG BUILDPLATFORM
 ARG BUILDARCH
 
 ARG MINIKUBE_VERSION=1.31.0
-ARG CRICTL_VERSION=1.26.0
-ARG CRI_DOCKERD_VERSION=0.3.4
-ARG CNI_PLUGINS_VERSION=1.3.0
 ARG GOOGLE_CLOUD_SDK_VERSION=438.0.0
 ARG KUBECTL_VERSION=1.27.3
 ARG HELM_VERSION=3.12.2
@@ -68,27 +65,6 @@ RUN apk add --no-cache \
     install minikube-linux-${BUILDARCH} /usr/local/bin/minikube && \
     minikube version && \
     rm -rf minikube-linux-${BUILDARCH} && \
-    \
-    # Install crictl
-    wget https://github.com/kubernetes-sigs/cri-tools/releases/download/v${CRICTL_VERSION}/crictl-v${CRICTL_VERSION}-linux-${BUILDARCH}.tar.gz && \
-    tar zxvf crictl-v${CRICTL_VERSION}-linux-${BUILDARCH}.tar.gz -C /usr/local/bin && \
-    rm -f crictl-v${CRICTL_VERSION}-linux-${BUILDARCH}.tar.gz && \
-    \
-    # Install cri-dockerd
-    curl -sSfLo /tmp/cri-dockerd.tgz https://github.com/Mirantis/cri-dockerd/releases/download/v${CRI_DOCKERD_VERSION}/cri-dockerd-${CRI_DOCKERD_VERSION}.${BUILDARCH}.tgz \
-    && tar xf /tmp/cri-dockerd.tgz --directory /tmp/ \
-    && mv /tmp/cri-dockerd/cri-dockerd /usr/local/bin/cri-dockerd \
-    && rm -rf /tmp/cri-dockerd \
-    && chmod 755 /usr/local/bin/cri-dockerd && \
-    \
-    # Install containernetworking-plugins
-    # https://github.com/containernetworking/plugins/releases/download/v1.3.0/cni-plugins-linux-arm64-v1.3.0.tgz
-    curl -LO "https://github.com/containernetworking/plugins/releases/download/v${CNI_PLUGINS_VERSION}/cni-plugins-linux-${BUILDARCH}-v${CNI_PLUGINS_VERSION}.tgz" && \
-    mkdir -p /opt/cni/bin && \
-    tar -xf "cni-plugins-linux-${BUILDARCH}-v${CNI_PLUGINS_VERSION}.tgz" -C /opt/cni/bin && \
-    rm "cni-plugins-linux-${BUILDARCH}-v${CNI_PLUGINS_VERSION}.tgz" && \
-    # Create folder for CNI config
-    mkdir -p /etc/cni/net.d && \
     # Cleanup
     rm -rf /var/cache/apk/*
 
