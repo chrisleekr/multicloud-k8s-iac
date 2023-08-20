@@ -56,11 +56,9 @@ jobs:
           file: Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          target: production-stage
           build-args: |
             PACKAGE_VERSION=${{ env.PACKAGE_VERSION }}
             GIT_HASH=${{ env.GIT_HASH }}
-            NODE_ENV=production
           tags: |
             chrisleekr/multicloud-k8s-iac:latest
             chrisleekr/multicloud-k8s-iac:${{ env.PACKAGE_VERSION }}
