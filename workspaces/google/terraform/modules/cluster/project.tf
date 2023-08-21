@@ -37,7 +37,7 @@ resource "null_resource" "enable_service_usage_api" {
       gcloud services enable serviceusage.googleapis.com cloudresourcemanager.googleapis.com --project ${local.project_id}
 
       while true; do
-        STATUS=$(gcloud services list --project ${local.project_id} --filter="config.name:serviceusage.googleapis.com" --format="value(config.state)")
+        STATUS=$(gcloud services list --project ${local.project_id} --filter="config.name:serviceusage.googleapis.com" --format="value(state)")
         if [ "$STATUS" == "ENABLED" ]; then
           echo "Service serviceusage.googleapis.com is enabled"
           break
