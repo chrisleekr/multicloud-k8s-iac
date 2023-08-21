@@ -7,16 +7,19 @@ output "kubernetes_cluster_name" {
 output "kubernetes_cluster_endpoint" {
   value       = module.cluster.kubernetes_cluster_endpoint
   description = "GKE Cluster Host"
+  sensitive   = true
 }
 
 output "load_balancer_ip_address" {
   value       = module.cluster.load_balancer_ip_address
   description = "Load Balancer IP Address"
+  sensitive   = true
 }
 
 output "load_balancer_ip_name" {
   value       = module.cluster.load_balancer_ip_name
   description = "Load Balancer IP Name"
+  sensitive   = true
 }
 
 output "mysql_root_password" {

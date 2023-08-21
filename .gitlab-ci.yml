@@ -1,8 +1,9 @@
 stages:
   - build
   - test
-  - deploy
-  - build production
+  - build CI image
+  - plan production
+  - apply production
 
 default:
   image: docker:20.10.16
@@ -49,7 +50,8 @@ lint-terraform:
     - ./scripts/validate-terraform.sh
 
 production:
-  stage: build production
+  stage: build CI image
+  interruptible: true
   only:
     - master
   before_script:
@@ -64,8 +66,64 @@ production:
     - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker context create dind
-    - docker buildx create --driver docker-container --use dind
+    - docker buildx create --driver docker-container --use dind --driver-opt image=moby/buildkit:buildx-stable-1,network=host --name buildkit-$CI_COMMIT_SHORT_SHA
   script:
     - docker buildx build --progress plain --platform
       linux/amd64,linux/arm64 --pull --tag
       $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:latest --push .
+  after_script:
+    - docker buildx stop buildkit-$CI_COMMIT_SHORT_SHA
+    - docker buildx rm buildkit-$CI_COMMIT_SHORT_SHA
+
+plan-gke:
+  stage: plan production
+  image: $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
+  interruptible: false
+  only:
+    - master
+  variables:
+    GOOGLE_APPLICATION_CREDENTIALS_encoded: $GOOGLE_APPLICATION_CREDENTIALS_encoded
+    GOOGLE_DEFAULT_PROJECT_ID: $GOOGLE_DEFAULT_PROJECT_ID
+    TF_WORKSPACE: $TERRAFORM_WORKSPACE
+    TF_TOKEN_app_terraform_io: $APP_TERRAFORM_IO
+    TF_VAR_google_org_id: $GOOGLE_ORG_ID
+    TF_VAR_google_billing_account_id: $GOOGLE_BILLING_ACCOUNT_ID
+  script:
+    - source container-files/root/.bashrc
+    - gcloud auth list
+    - cd workspaces/google/terraform/
+    - terraform init -input=false
+    - terraform workspace list
+    - terraform plan -input=false -out=deploy.plan
+  artifacts:
+    paths:
+      - workspaces/google/terraform/deploy.plan
+    untracked: false
+    when: on_success
+    expire_in: "1 day"
+
+apply-gke:
+  stage: apply production
+  image: $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
+  interruptible: false
+  when: manual
+  only:
+    - master
+  dependencies:
+    - plan-gke
+  variables:
+    GOOGLE_APPLICATION_CREDENTIALS_encoded: $GOOGLE_APPLICATION_CREDENTIALS_encoded
+    GOOGLE_DEFAULT_PROJECT_ID: $GOOGLE_DEFAULT_PROJECT_ID
+    TF_WORKSPACE: $TERRAFORM_WORKSPACE
+    TF_TOKEN_app_terraform_io: $APP_TERRAFORM_IO
+    TF_VAR_google_org_id: $GOOGLE_ORG_ID
+    TF_VAR_google_billing_account_id: $GOOGLE_BILLING_ACCOUNT_ID
+  script:
+    - source container-files/root/.bashrc
+    - ls -alh
+    - gcloud auth list
+    - cd workspaces/google/terraform/
+    - ls -alh
+    - terraform init -input=false
+    - terraform workspace list
+    - terraform apply -auto-approve -input=false deploy.plan
