@@ -22,3 +22,7 @@ yarn-error.log*
 .git
 
 .env
+.circleci
+.github
+.husky
+.vscode
