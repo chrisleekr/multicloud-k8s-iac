@@ -13,6 +13,10 @@ ARG TERRAFORM_VERSION=1.5.3
 # BUILDPLATFORM=linux/arm64/v8, BUILDARCH=arm64
 RUN echo "BUILDPLATFORM=$BUILDPLATFORM, BUILDARCH=$BUILDARCH"
 
+SHELL ["/bin/ash", "-o", "pipefail", "-c"]
+
+# Change to tmp folder
+WORKDIR /tmp
 # Install dependencies
 RUN set -eux; \
     \
@@ -23,10 +27,8 @@ RUN set -eux; \
     yq=4.33.3-r2 \
     jq=1.6-r3 \
     git=2.40.1-r0 \
-    python3=3.11.4-r0 \
+    python3=3.11.5-r0 \
     && \
-    # Change to tmp folder
-    cd /tmp && \
     \
     # Install kubectl
     curl -L https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/${BUILDARCH}/kubectl \
@@ -42,7 +44,7 @@ RUN set -eux; \
     helm version && \
     \
     # Install Terraform
-    wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${BUILDARCH}.zip && \
+    curl -LO https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${BUILDARCH}.zip && \
     unzip terraform_${TERRAFORM_VERSION}_linux_${BUILDARCH}.zip && \
     rm terraform_${TERRAFORM_VERSION}_linux_${BUILDARCH}.zip && \
     mv terraform /usr/local/bin/terraform && \
@@ -69,6 +71,7 @@ RUN apk add --no-cache \
     rm -rf /var/cache/apk/*
 
 # Install gcloud - Separate layer to speed up builds
+WORKDIR /
 ENV PATH /google-cloud-sdk/bin:$PATH
 RUN export GOOGLE_CLOUD_SDK_ARCH="x86_64"; \
     if [ "$BUILDARCH" = "arm64" ]; then \
@@ -82,13 +85,13 @@ RUN export GOOGLE_CLOUD_SDK_ARCH="x86_64"; \
     gcloud --version && \
     gcloud components install gke-gcloud-auth-plugin && \
     # Google Cloud CLI cleanup
-    rm -rf $(find google-cloud-sdk/ -regex ".*/__pycache__") \
-    google-cloud-sdk/.install/.backup \
+    find google-cloud-sdk/ -regex ".*/__pycache__" -print0 | xargs -0 rm -rf && \
+    rm -rf google-cloud-sdk/.install/.backup \
     google-cloud-sdk/bin/anthoscli \
     google-cloud-sdk/lib/googlecloudsdk/third_party/apis
 
-COPY container-files/ /
-
 WORKDIR /srv
+
+COPY container-files/ /
 
 COPY . .
