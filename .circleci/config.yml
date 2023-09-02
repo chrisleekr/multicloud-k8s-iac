@@ -1,0 +1,78 @@
+version: 2.1
+
+orbs:
+  docker: circleci/docker@2.2.0
+
+jobs:
+  lint:
+    docker:
+      - image: $DOCKER_REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-<< pipeline.trigger_parameters.gitlab.commit_sha >>
+        auth:
+          username: $DOCKER_LOGIN
+          password: $DOCKER_PASSWORD
+    resource_class: small
+    working_directory: /srv
+    steps:
+      - run:
+          name: Lint Helm
+          command: |
+            ./scripts/validate-helm.sh
+      - run:
+          name: Lint Terraform
+          command: |
+            ./scripts/validate-terraform.sh
+  build-production:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: Download utilities
+          command: |
+            sudo apt update
+            sudo apt install qemu qemu-user-static
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: docker login
+          command: |
+            docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD $DOCKER_REGISTRY_DOMAIN
+      - run:
+          name: Setup Qemu
+          command: |
+            docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+            docker context create dind
+            docker buildx create --driver docker-container --use dind --driver-opt image=moby/buildkit:buildx-stable-1,network=host --name buildkit-<< pipeline.trigger_parameters.gitlab.commit_sha >>
+      - run:
+          name: Build production image
+          command: |
+            docker buildx build --progress plain --platform linux/amd64,linux/arm64 --pull --tag $DOCKER_REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:latest --push .
+
+
+workflows:
+  build-docker-image:
+    jobs:
+      - docker/hadolint:
+          dockerfiles: Dockerfile
+          checkout: true
+          executor-class: small
+          hadolint-tag: latest-debian
+      - docker/publish:
+          requires:
+            - docker/hadolint
+          dockerfile: Dockerfile
+          registry: $DOCKER_REGISTRY_DOMAIN
+          cache_from: $DOCKER_REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:cache
+          image: chrisleekr/multicloud-k8s-iac
+          tag: cache,build-<< pipeline.trigger_parameters.gitlab.commit_sha >>
+          extra_build_args: '--build-arg BUILDKIT_INLINE_CACHE=1'
+          use-buildkit: true
+      - lint:
+          requires:
+            - docker/publish
+      - build-production:
+          requires:
+            - lint
+          filters:
+            branches:
+              only: master
