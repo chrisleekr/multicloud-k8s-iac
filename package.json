@@ -16,6 +16,7 @@
     "prepare": "husky install",
     "precommit": "lint-staged",
     "lint:gcp": "tflint gcp",
+    "lint:dockerfile": "hadolint Dockerfile",
     "docker:build": "./scripts/docker-build.sh",
     "docker:run": "./scripts/docker-run.sh",
     "docker:shell": "docker exec -it \"multicloud-k8s-iac\" /bin/bash",
@@ -42,6 +43,9 @@
     }
   },
   "lint-staged": {
+    "Dockerfile": [
+      "npm run lint:dockerfile"
+    ],
     "*.{tf,hcl,tfbackend}": [
       "cd ./workspaces && terraform fmt -recursive && cd ..",
       "cd ./workspaces && terraform validate && cd ..",
