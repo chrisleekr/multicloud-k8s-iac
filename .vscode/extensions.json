@@ -9,6 +9,7 @@
     "timonwong.shellcheck",
     "foxundermoon.shell-format",
     "DavidAnson.vscode-markdownlint",
-    "GitHub.vscode-github-actions"
+    "GitHub.vscode-github-actions",
+    "exiasr.hadolint"
   ]
 }
