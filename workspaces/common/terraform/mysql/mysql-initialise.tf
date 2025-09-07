@@ -43,7 +43,7 @@ resource "kubernetes_job" "initialise_mysql" {
         }
         container {
           name  = "initialisation"
-          image = "alpine:3.17"
+          image = "alpine:3.22"
           volume_mount {
             mount_path = "/tmp/initialise.sh"
             name       = "initialise-sh"

@@ -25,11 +25,13 @@ variable "google_cluster_name" {
 
 variable "protocol" {
   description = "HTTP protocol"
+  type        = string
   default     = "https"
 }
 
 variable "domain" {
   description = "Domain Name"
+  type        = string
   default     = "nvm.chrislee.kr"
 }
 
@@ -38,4 +40,3 @@ variable "ingress_class_name" {
   type        = string
   default     = "nginx"
 }
-

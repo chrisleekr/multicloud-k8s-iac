@@ -6,9 +6,16 @@ stages:
   - apply production
 
 default:
-  image: docker:20.10.16
+  image: docker:27
   services:
-    - docker:20.10.16-dind
+    - name: docker:27-dind
+      alias: docker
+
+variables:
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_VERIFY: 1
+  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
 
 build:
   stage: build
@@ -18,33 +25,33 @@ build:
   interruptible: true
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker pull "$REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:cache" || true
+    - docker pull "$CI_REGISTRY/chrisleekr/multicloud-k8s-iac:cache" || true
     - >
       docker buildx build . --pull
-      --cache-from=$REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:cache
+      --cache-from=$CI_REGISTRY/chrisleekr/multicloud-k8s-iac:cache
       --build-arg BUILDKIT_INLINE_CACHE=1
       --progress plain -t
-      $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
-      -t $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:cache
-    - docker push $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:cache
+      $CI_REGISTRY/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
+      -t $CI_REGISTRY/chrisleekr/multicloud-k8s-iac:cache
+    - docker push $CI_REGISTRY/chrisleekr/multicloud-k8s-iac:cache
     - docker push
-      $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
+      $CI_REGISTRY/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
 
 lint-helm:
   stage: test
-  image: $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
+  image: $CI_REGISTRY/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
   interruptible: true
   artifacts:
     paths:
       - helm/nvm/template
       - helm/nvm-db/template
-    expire_in: '7 days'
+    expire_in: "7 days"
   script:
     - ./scripts/validate-helm.sh
 
 lint-terraform:
   stage: test
-  image: $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
+  image: $CI_REGISTRY/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
   interruptible: true
   script:
     - ./scripts/validate-terraform.sh
@@ -70,14 +77,14 @@ production:
   script:
     - docker buildx build --progress plain --platform
       linux/amd64,linux/arm64 --pull --tag
-      $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:latest --push .
+      $CI_REGISTRY/chrisleekr/multicloud-k8s-iac:latest --push .
   after_script:
     - docker buildx stop buildkit-$CI_COMMIT_SHORT_SHA
     - docker buildx rm buildkit-$CI_COMMIT_SHORT_SHA
 
 plan-gke:
   stage: plan production
-  image: $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
+  image: $CI_REGISTRY/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
   interruptible: false
   only:
     - master
@@ -89,7 +96,7 @@ plan-gke:
     TF_VAR_google_org_id: $GOOGLE_ORG_ID
     TF_VAR_google_billing_account_id: $GOOGLE_BILLING_ACCOUNT_ID
   script:
-    - source container-files/root/.bashrc
+    - source container/root/.bashrc
     - gcloud auth list
     - cd workspaces/google/terraform/
     - terraform init -input=false
@@ -104,7 +111,7 @@ plan-gke:
 
 apply-gke:
   stage: apply production
-  image: $REGISTRY_DOMAIN/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
+  image: $CI_REGISTRY/chrisleekr/multicloud-k8s-iac:build-$CI_COMMIT_SHORT_SHA
   interruptible: false
   when: manual
   only:
@@ -119,7 +126,7 @@ apply-gke:
     TF_VAR_google_org_id: $GOOGLE_ORG_ID
     TF_VAR_google_billing_account_id: $GOOGLE_BILLING_ACCOUNT_ID
   script:
-    - source container-files/root/.bashrc
+    - source container/root/.bashrc
     - ls -alh
     - gcloud auth list
     - cd workspaces/google/terraform/

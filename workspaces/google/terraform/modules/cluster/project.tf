@@ -24,6 +24,10 @@ resource "google_project" "project" {
   project_id      = local.project_id
   org_id          = var.google_org_id
   billing_account = var.google_billing_account_id
+
+  # See https://avd.aquasec.com/misconfig/avd-gcp-0010
+  # The default network which is provided for a project contains multiple insecure firewall rules which allow ingress to the project’s infrastructure. Creation of this network should therefore be disabled.
+  auto_create_network = false
 }
 
 

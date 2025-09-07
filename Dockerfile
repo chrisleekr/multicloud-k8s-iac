@@ -1,14 +1,14 @@
 # syntax=docker/dockerfile:1
-FROM --platform=$BUILDPLATFORM alpine:3.18
+FROM --platform=$BUILDPLATFORM alpine:3.22
 
 ARG BUILDPLATFORM
 ARG BUILDARCH
 
-ARG MINIKUBE_VERSION=1.31.0
-ARG GOOGLE_CLOUD_SDK_VERSION=438.0.0
-ARG KUBECTL_VERSION=1.27.3
-ARG HELM_VERSION=3.12.2
-ARG TERRAFORM_VERSION=1.5.3
+ARG MINIKUBE_VERSION=1.36.0
+ARG GOOGLE_CLOUD_SDK_VERSION=537.0.0
+ARG KUBECTL_VERSION=1.34.0
+ARG HELM_VERSION=3.18.6
+ARG TERRAFORM_VERSION=1.13.1
 
 # BUILDPLATFORM=linux/arm64/v8, BUILDARCH=arm64
 RUN echo "BUILDPLATFORM=$BUILDPLATFORM, BUILDARCH=$BUILDARCH"
@@ -21,13 +21,13 @@ WORKDIR /tmp
 RUN set -eux; \
     \
     apk add --no-cache \
-    ca-certificates=20230506-r0 \
-    curl=8.2.1-r0 \
-    bash=5.2.15-r5 \
-    yq=4.33.3-r2 \
-    jq=1.6-r3 \
-    git=2.40.1-r0 \
-    python3=3.11.5-r0 \
+    ca-certificates=20250619-r0 \
+    curl=8.14.1-r1 \
+    bash=5.2.37-r0 \
+    yq-go=4.46.1-r2 \
+    jq=1.8.0-r0 \
+    git=2.49.1-r0 \
+    python3=3.12.11-r0 \
     && \
     \
     # Install kubectl
@@ -55,11 +55,10 @@ RUN set -eux; \
 
 # Install minikube - Separate layer to speed up builds
 RUN apk add --no-cache \
-    openssh=9.3_p2-r0 \
-    gcompat=1.1.0-r1 \
-    libc6-compat=1.2.4-r1 \
-    iptables=1.8.9-r2 \
-    conntrack-tools=1.4.7-r1 \
+    openssh=10.0_p1-r7 \
+    gcompat=1.1.0-r4 \
+    iptables=1.8.11-r1 \
+    conntrack-tools=1.4.8-r0 \
     && \
     \
     # Install minikube
@@ -72,7 +71,7 @@ RUN apk add --no-cache \
 
 # Install gcloud - Separate layer to speed up builds
 WORKDIR /
-ENV PATH /google-cloud-sdk/bin:$PATH
+ENV PATH="/google-cloud-sdk/bin:$PATH"
 RUN export GOOGLE_CLOUD_SDK_ARCH="x86_64"; \
     if [ "$BUILDARCH" = "arm64" ]; then \
     export GOOGLE_CLOUD_SDK_ARCH="arm"; \
@@ -92,6 +91,6 @@ RUN export GOOGLE_CLOUD_SDK_ARCH="x86_64"; \
 
 WORKDIR /srv
 
-COPY container-files/ /
+COPY container/ /
 
 COPY . .
