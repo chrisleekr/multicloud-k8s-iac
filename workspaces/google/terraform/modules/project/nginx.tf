@@ -21,14 +21,3 @@ EOF
   ]
 
 }
-
-data "kubernetes_service" "nginx_ingress_controller" {
-  count = var.ingress_class_name == "nginx" ? 1 : 0
-
-  depends_on = [helm_release.nginx]
-
-  metadata {
-    name      = "${helm_release.nginx[0].metadata[0].name}-${helm_release.nginx[0].namespace}-controller"
-    namespace = kubernetes_namespace.ingress.metadata[0].name
-  }
-}

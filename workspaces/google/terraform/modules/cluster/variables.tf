@@ -1,3 +1,9 @@
+variable "environment" {
+  description = "Environment"
+  type        = string
+  default     = "dev"
+}
+
 variable "google_region" {
   description = "Location of the GKE cluster"
   type        = string

@@ -1,30 +1,30 @@
 terraform {
-  required_version = ">= 1.5.0"
+  required_version = ">= 1.13.1"
 
   required_providers {
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">= 2.16.1"
+      version = ">= 2.38.0"
     }
 
     helm = {
       source  = "hashicorp/helm"
-      version = ">= 2.8.0"
+      version = ">= 3.0.2"
     }
 
     random = {
       source  = "hashicorp/random"
-      version = ">= 3.4.3"
+      version = ">= 3.7.2"
     }
 
     null = {
       source  = "hashicorp/null"
-      version = ">= 3.2.1"
+      version = ">= 3.2.4"
     }
 
     kubectl = {
       source  = "gavinbunney/kubectl"
-      version = "~> 1.14.0"
+      version = ">= 1.19.0"
     }
   }
 }
@@ -36,7 +36,7 @@ provider "kubernetes" {
 }
 
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     config_path    = "~/.kube/config"
     config_context = "minikube"
   }

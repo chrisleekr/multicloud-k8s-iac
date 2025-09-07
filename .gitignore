@@ -3,8 +3,13 @@
 *.tfvars
 .env
 node_modules/
-container/root/.kube
+
 config
 stage4/local-path-provisioner*
+
+# Container files
+container/root/*
+!container/root/.bashrc
+
 
 .DS_Store

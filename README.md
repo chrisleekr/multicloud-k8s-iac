@@ -8,6 +8,8 @@ This project demonstrates an implementation of Infrastructure as Code (IaC) for 
 
 Before getting started, please ensure that you have the following software installed:
 
+- [Task](https://taskfile.dev/installation/): To simplify the command line interface.
+- [Pre-commit](https://pre-commit.com/#install): To run various linting and formatting tools.
 - [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
 - [Docker](https://docs.docker.com/engine/install/)
 - [Google Cloud CLI](https://cloud.google.com/sdk/docs/install)
@@ -29,6 +31,15 @@ This project includes the following features:
   - Github Actions
 - Various bash scripts to deploy the cluster
 
+## Task commands
+
+```bash
+task setup-repo
+task precommit
+task docker-build
+task docker-exec
+```
+
 ## Provision a cluster with Google Kubernetes Engine (GKE)
 
 To provision a cluster with GKE, follow these steps:
@@ -36,7 +47,7 @@ To provision a cluster with GKE, follow these steps:
 1. Launch the orchestrator by running the following command:
 
    ```bash
-   npm run docker:exec
+   task docker-exec
    ```
 
 2. Make the orchestrator accessible to the GKE cluster by running the following command:
@@ -104,7 +115,7 @@ To provision a cluster with Minikube, follow these steps:
 2. Launch the orchestrator by running the following command:
 
    ```bash
-   npm run docker:exec
+   task docker-exec
 
    # install docker
    apk add --no-cache docker

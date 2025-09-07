@@ -1,0 +1,58 @@
+version: "3"
+
+dotenv: [".env"]
+
+env:
+  IMAGE_TAG:
+    sh: "echo ${IMAGE_TAG:-latest}"
+  REGISTRY_DOMAIN:
+    sh: "echo ${REGISTRY_DOMAIN:-registry.hub.docker.com}"
+  REPO_NAME:
+    sh: "echo ${REPO_NAME:-chrisleekr}"
+  IMAGE_NAME:
+    sh: "echo ${IMAGE_NAME:-multicloud-k8s-iac}"
+  BUILD_PLATFORM:
+    sh: "echo ${BUILD_PLATFORM:-linux/amd64}" # Align with the GitLab CI
+  BUILD_ARCH:
+    sh: "echo ${BUILD_ARCH:-amd64}" # Align with the GitLab CI
+  ENVIRONMENT:
+    sh: "echo ${ENVIRONMENT:-dev}"
+  REGION:
+    sh: "echo ${REGION:-ap-southeast-2}"
+
+tasks:
+  setup-repo:
+    desc: Setup the repository
+    cmds:
+      - pre-commit install
+
+  precommit:
+    desc: Run pre-commit hooks
+    cmds:
+      - pre-commit run --all-files  --verbose
+
+  validate-terraform:
+    desc: Validate Terraform
+    cmds:
+      - ./scripts/validate-terraform.sh
+
+  docker-build:
+    desc: Build Docker image
+    cmds:
+      - ./scripts/docker-build.sh
+
+  docker-run:
+    desc: Run Docker container
+    cmds:
+      - ./scripts/docker-run.sh
+
+  docker-shell:
+    desc: Access to docker shell
+    cmds:
+      - docker exec -it "${IMAGE_NAME}" /bin/bash
+
+  docker-exec:
+    desc: Execute docker command
+    cmds:
+      - task docker-run
+      - task docker-shell

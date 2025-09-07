@@ -22,6 +22,13 @@ resource "google_compute_subnetwork" "private_subnet" {
   region                   = var.google_region
   private_ip_google_access = true
 
+  # See https://avd.aquasec.com/misconfig/avd-gcp-0029
+  log_config {
+    aggregation_interval = "INTERVAL_10_MIN"
+    flow_sampling        = 0.5
+    metadata             = "INCLUDE_ALL_METADATA"
+  }
+
   secondary_ip_range {
     range_name    = "k8s-pods"
     ip_cidr_range = "10.16.0.0/12"

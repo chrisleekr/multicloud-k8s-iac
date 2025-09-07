@@ -41,7 +41,7 @@ jobs:
           retention-days: 1
 
   lint:
-    name: 'Lint'
+    name: "Lint"
     runs-on: ubuntu-latest
     needs: build
     steps:

@@ -17,6 +17,10 @@ resource "google_container_cluster" "primary" {
   project  = local.project_id
   location = var.google_region
 
+  resource_labels = {
+    "env" = var.environment
+  }
+
   remove_default_node_pool = true
   initial_node_count       = 1
   network                  = google_compute_network.vpc.name
@@ -58,6 +62,25 @@ resource "google_container_cluster" "primary" {
     cluster_secondary_range_name  = "k8s-pods"
     services_secondary_range_name = "k8s-services"
   }
+
+  # See https://avd.aquasec.com/misconfig/avd-gcp-0056
+  network_policy {
+    enabled = true
+  }
+
+  # See https://avd.aquasec.com/misconfig/avd-gcp-0059
+  private_cluster_config {
+    enable_private_nodes = true
+  }
+
+  # See https://avd.aquasec.com/misconfig/avd-gcp-0061
+  # Enabling authorized networks means you can restrict master access to a fixed set of CIDR ranges
+  master_authorized_networks_config {
+    cidr_blocks {
+      cidr_block   = "10.10.128.0/24"
+      display_name = "internal"
+    }
+  }
 }
 
 resource "google_service_account" "gke_node_pool_sa" {
@@ -97,8 +120,15 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
   node_config {
     preemptible  = true
     machine_type = "e2-medium"
+    # See https://avd.aquasec.com/misconfig/avd-gcp-0054
+    image_type = "COS"
 
     service_account = google_service_account.gke_node_pool_sa.email
+
+    # See https://avd.aquasec.com/misconfig/avd-gcp-0048
+    metadata = {
+      disable-legacy-endpoints = true
+    }
 
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -106,6 +136,11 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
 
     labels = {
       preemptible = "true"
+    }
+
+    # See https://avd.aquasec.com/misconfig/avd-gcp-0057
+    workload_metadata_config {
+      mode = "GKE_METADATA"
     }
   }
 }

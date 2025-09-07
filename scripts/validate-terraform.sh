@@ -4,7 +4,6 @@ set -e
 set -o errexit
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-DIR=$(realpath "$SCRIPT_DIR/..")
 
 # shellcheck source=common-func.sh
 source "$SCRIPT_DIR/common-func.sh"

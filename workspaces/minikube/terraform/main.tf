@@ -7,8 +7,8 @@ module "kong_ingress" {
 
   source = "../../common/terraform/kong-ingress"
 
-  domain                   = var.domain
-  protocol                 = var.protocol
+  domain = var.domain
+  # protocol                 = var.protocol
   load_balancer_ip_address = "127.0.0.1"
 }
 

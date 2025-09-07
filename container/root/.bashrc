@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -o allexport # Export all variables that are defined in the script
 
 echo '           __________

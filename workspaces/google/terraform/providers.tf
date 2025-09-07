@@ -1,35 +1,35 @@
 terraform {
-  required_version = ">= 1.5.0"
+  required_version = ">= 1.13.1"
 
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = ">= 4.74.0"
+      version = ">= 7.1.1"
     }
 
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">= 2.19.0"
+      version = ">= 2.38.0"
     }
 
     helm = {
       source  = "hashicorp/helm"
-      version = ">= 2.9.0"
+      version = ">= 3.0.2"
     }
 
     random = {
       source  = "hashicorp/random"
-      version = ">= 3.4.3"
+      version = ">= 3.7.2"
     }
 
     null = {
       source  = "hashicorp/null"
-      version = ">= 3.2.1"
+      version = ">= 3.2.4"
     }
 
     kubectl = {
       source  = "gavinbunney/kubectl"
-      version = "~> 1.14.0"
+      version = ">= 1.19.0"
     }
   }
 }
@@ -51,7 +51,7 @@ provider "kubernetes" {
 }
 
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     host  = "https://${module.cluster.kubernetes_cluster_endpoint}"
     token = data.google_client_config.provider.access_token
     cluster_ca_certificate = base64decode(
@@ -68,4 +68,3 @@ provider "kubectl" {
   )
   load_config_file = false
 }
-
