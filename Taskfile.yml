@@ -49,7 +49,7 @@ tasks:
   docker-shell:
     desc: Access to docker shell
     cmds:
-      - docker exec -it "multicloud-k8s-iac" /bin/bash
+      - docker exec -it "${IMAGE_NAME}" /bin/bash
 
   docker-exec:
     desc: Execute docker command

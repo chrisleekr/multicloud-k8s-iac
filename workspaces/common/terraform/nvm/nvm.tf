@@ -54,10 +54,6 @@ resource "helm_release" "nvm" {
         value = "${var.protocol}://${var.domain}/api"
       },
       {
-        name  = "apps.api.env.API_URL"
-        value = "${var.protocol}://${var.domain}/api"
-      },
-      {
         name  = "apps.api.env.BACKEND_URL"
         value = "${var.protocol}://${var.domain}/backend"
       },
