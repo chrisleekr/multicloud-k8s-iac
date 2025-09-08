@@ -54,12 +54,10 @@ jobs:
         run: |
           docker load -i multicloud-k8s-iac-$GITHUB_SHA.tar
 
-      - name: Lint Helm
+      - name: Install Task
         run: |
-          docker run --rm multicloud-k8s-iac:$GITHUB_SHA \
-          sh -c './scripts/validate-helm.sh'
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d
 
-      - name: Lint Terraform
+      - name: Run Task precommit to lint all files
         run: |
-          docker run --rm multicloud-k8s-iac:$GITHUB_SHA \
-          sh -c './scripts/validate-terraform.sh'
+          task precommit
