@@ -45,14 +45,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Download Docker image
-        uses: actions/download-artifact@v5
-        with:
-          name: multicloud-k8s-iac
+      - name: Checkout source code
+        uses: actions/checkout@v3
 
-      - name: Load Docker image
-        run: |
-          docker load -i multicloud-k8s-iac-$GITHUB_SHA.tar
+      # - name: Download Docker image
+      #   uses: actions/download-artifact@v5
+      #   with:
+      #     name: multicloud-k8s-iac
+
+      # - name: Load Docker image
+      #   run: |
+      #     docker load -i multicloud-k8s-iac-$GITHUB_SHA.tar
 
       - name: Install Task
         run: |
