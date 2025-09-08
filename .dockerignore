@@ -1,7 +1,6 @@
 **/.terraform
 **/terraform.tfstate
 *.tfvars
-*.tfvars
 .env
 node_modules
 Dockerfile
@@ -26,3 +25,9 @@ yarn-error.log*
 .github
 .husky
 .vscode
+
+
+.gitlab-ci.yml
+
+container/.cache
+*.cast

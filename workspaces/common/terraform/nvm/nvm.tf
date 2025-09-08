@@ -27,107 +27,100 @@ resource "helm_release" "nvm" {
 
   lint = true
 
-  set {
-    name  = "ingress.host"
-    value = var.domain
-  }
+  set = concat(
+    [
+      {
+        name  = "ingress.host"
+        value = var.domain
+      },
+      {
+        name  = "ingress.className"
+        value = var.ingress_class_name
+      },
+      {
+        name  = "ingress.tls.enabled"
+        value = var.ingress_tls_enabled
+      },
+      {
+        name  = "ingress.tls.secretName"
+        value = var.ingress_tls_secret_name
+      },
+      {
+        name  = "environment"
+        value = var.environment
+      },
+      {
+        name  = "apps.api.env.API_URL"
+        value = "${var.protocol}://${var.domain}/api"
+      },
+      {
+        name  = "apps.api.env.BACKEND_URL"
+        value = "${var.protocol}://${var.domain}/backend"
+      },
+      {
+        name  = "apps.api.env.FRONTEND_URL"
+        value = "${var.protocol}://${var.domain}/frontend-vue"
+      },
+      {
+        name  = "apps.api.env.EMAIL_FROM_ADDRESS"
+        value = "support@${var.domain}"
+      },
+      {
+        name  = "apps.frontendVue.env.API_URL"
+        value = "${var.protocol}://${var.domain}/api"
+      },
+      {
+        name  = "apps.backend.env.API_URL"
+        value = "${var.protocol}://${var.domain}/api"
+      }
+    ],
+    [
+      for key, value in var.ingress_annotations : {
+        name  = "ingress.annotations.${replace(key, ".", "\\.")}"
+        value = value
+      }
+    ]
+  )
 
-  set {
-    name  = "ingress.className"
-    value = var.ingress_class_name
-  }
 
-  set {
-    name  = "ingress.tls.enabled"
-    value = var.ingress_tls_enabled
-  }
-
-  set {
-    name  = "ingress.tls.secretName"
-    value = var.ingress_tls_secret_name
-  }
-
-  dynamic "set" {
-    for_each = var.ingress_annotations
-
-    content {
-      name  = "ingress.annotations.${replace(set.key, ".", "\\.")}"
-      value = set.value
+  set_sensitive = [
+    {
+      name  = "secrets.dbHost.value"
+      value = "mysql-innodbcluster.mysql.svc.cluster.local"
+    },
+    {
+      name  = "secrets.dbPort.value"
+      value = 6446
+    },
+    {
+      name  = "secrets.dbUser.value"
+      value = "boilerplate"
+    },
+    {
+      name  = "secrets.dbPassword.value"
+      value = var.mysql_boilerplate_password
+    },
+    {
+      name  = "secrets.dbName.value"
+      value = "boilerplate"
+    },
+    {
+      name  = "secrets.jwtSecretKey.value"
+      value = random_password.jwt_secret_key.result
+    },
+    {
+      name  = "secrets.jwtRefreshSecretKey.value"
+      value = random_password.jwt_refresh_secret_key.result
     }
-  }
+  ]
 
-  set {
-    name  = "environment"
-    value = var.environment
-  }
 
-  set_sensitive {
-    name  = "secrets.dbHost.value"
-    value = "mysql-innodbcluster.mysql.svc.cluster.local"
-  }
+  # dynamic "set" {
+  #   for_each = var.ingress_annotations
 
-  set_sensitive {
-    name  = "secrets.dbPort.value"
-    value = 6446
-  }
-
-  set_sensitive {
-    name  = "secrets.dbUser.value"
-    value = "boilerplate"
-  }
-
-  set_sensitive {
-    name  = "secrets.dbPassword.value"
-    value = var.mysql_boilerplate_password
-  }
-
-  set_sensitive {
-    name  = "secrets.dbName.value"
-    value = "boilerplate"
-  }
-
-  set_sensitive {
-    name  = "secrets.jwtSecretKey.value"
-    value = random_password.jwt_secret_key.result
-  }
-
-  set_sensitive {
-    name  = "secrets.jwtRefreshSecretKey.value"
-    value = random_password.jwt_refresh_secret_key.result
-  }
-
-  set {
-    name  = "apps.api.env.API_URL"
-    value = "${var.protocol}://${var.domain}/api"
-  }
-
-  set {
-    name  = "apps.api.env.API_URL"
-    value = "${var.protocol}://${var.domain}/api"
-  }
-
-  set {
-    name  = "apps.api.env.BACKEND_URL"
-    value = "${var.protocol}://${var.domain}/backend"
-  }
-
-  set {
-    name  = "apps.api.env.FRONTEND_URL"
-    value = "${var.protocol}://${var.domain}/frontend-vue"
-  }
-
-  set {
-    name  = "apps.api.env.EMAIL_FROM_ADDRESS"
-    value = "support@${var.domain}"
-  }
-
-  set {
-    name  = "apps.frontendVue.env.API_URL"
-    value = "${var.protocol}://${var.domain}/api"
-  }
-
-  set {
-    name  = "apps.backend.env.API_URL"
-    value = "${var.protocol}://${var.domain}/api"
-  }
+  #   content {
+  #     name  = "ingress.annotations.${replace(set.key, ".", "\\.")}"
+  #     value = set.value
+  #   }
+  # }
 }
