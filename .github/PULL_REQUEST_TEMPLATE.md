@@ -7,4 +7,3 @@ Please check the following to make sure your contribution follows our guideline 
 
 - [ ] Do this
 - [ ] Do that
-

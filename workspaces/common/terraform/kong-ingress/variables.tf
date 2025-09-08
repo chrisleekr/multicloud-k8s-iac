@@ -1,7 +1,7 @@
-variable "protocol" {
-  description = "HTTP protocol"
-  type        = string
-}
+# variable "protocol" {
+#   description = "HTTP protocol"
+#   type        = string
+# }
 
 variable "domain" {
   description = "Domain Name"

@@ -4,13 +4,12 @@ set -e
 set -o errexit
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-DIR=$(realpath "$SCRIPT_DIR/..")
 
-# shellcheck source=common-func.sh
+# shellcheck source=/dev/null
 source "$SCRIPT_DIR/common-func.sh"
 
 # Array of directories to validate
-dirs=("google" "minikube")
+dirs=("aws" "gcp" "minikube")
 
 for dir in "${dirs[@]}"; do
     log "Validating $dir Terraform..."
