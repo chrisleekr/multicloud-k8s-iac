@@ -6,6 +6,12 @@ default_stages:
   - pre-push
 
 repos:
+  - repo: https://github.com/gruntwork-io/pre-commit
+    rev: v0.1.30
+    hooks:
+      - id: helmlint
+      - id: shellcheck
+
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.97.0
     hooks:

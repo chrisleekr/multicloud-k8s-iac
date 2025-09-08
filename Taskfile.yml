@@ -31,6 +31,11 @@ tasks:
     cmds:
       - pre-commit run --all-files  --verbose
 
+  validate:helm:
+    desc: Validate Helm
+    cmds:
+      - ./scripts/validate-helm.sh
+
   validate:terraform:
     desc: Validate Terraform
     cmds:
@@ -91,11 +96,10 @@ tasks:
     cmds:
       - terraform apply
 
-  # aws:terraform:destroy:
-  #   desc: Destroy AWS Terraform
-  #   dir: workspaces/aws/terraform
-  #   cmds:
-  #     - terraform destroy
+  aws:bastion:access:
+    desc: Access to AWS Bastion
+    cmds:
+      - ./workspaces/aws/scripts/access-bastion.sh
 
   gcp:terraform:init:
     desc: Initialize GCP Terraform

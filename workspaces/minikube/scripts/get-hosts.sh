@@ -7,6 +7,8 @@
 set -e
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+
+# shellcheck source=/dev/null
 source "$SCRIPT_DIR/../../../scripts/common-func.sh"
 
 INGRESS_HOST=$(kubectl --context=minikube --all-namespaces=true get ingress -o jsonpath='{.items[0].spec.rules[*].host}')
