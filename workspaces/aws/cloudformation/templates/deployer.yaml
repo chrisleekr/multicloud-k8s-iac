@@ -1,0 +1,107 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "CloudFormation bootstrap template to create IAM role for infrastructure deployment"
+
+Parameters:
+  Environment:
+    Type: String
+    Description: "Environment (dev/staging/prod)"
+    AllowedValues:
+      - dev
+      - staging
+      - prod
+    Default: dev
+
+Resources:
+  InfrastructureDeployerRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: infrastructure-deployer-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: cloudformation.amazonaws.com
+            Action: "sts:AssumeRole"
+          - Effect: Allow
+            Principal:
+              AWS: "arn:aws:iam::120569602166:root"
+            Action: "sts:AssumeRole"
+            Condition:
+              StringEquals:
+                "aws:PrincipalTag/team": "platform"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AmazonVPCFullAccess"
+        - "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+      Policies:
+        - PolicyName: infrastructure-deployer-policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "ec2:*"
+                  - "vpc:*"
+                  - "cloudformation:*"
+                  - "iam:CreateRole"
+                  - "iam:PassRole"
+                  - "iam:TagRole"
+                  - "iam:GetRole"
+                  - "iam:ListRolePolicies"
+                  - "iam:ListAttachedRolePolicies"
+                  - "iam:DeleteRole"
+                  - "iam:CreatePolicy"
+                  - "iam:DeletePolicy"
+                  - "iam:TagPolicy"
+                  - "iam:GetPolicy"
+                  - "iam:ListPolicyVersions"
+                  - "iam:GetPolicyVersion"
+                  - "iam:CreatePolicyVersion"
+                  - "iam:DeletePolicyVersion"
+                  - "iam:AttachRolePolicy"
+                  - "iam:DetachRolePolicy"
+                  - "iam:ListInstanceProfilesForRole"
+                  - "iam:CreateInstanceProfile"
+                  - "iam:DeleteInstanceProfile"
+                  - "iam:AddRoleToInstanceProfile"
+                  - "iam:RemoveRoleFromInstanceProfile"
+                  - "iam:TagInstanceProfile"
+                  - "iam:GetInstanceProfile"
+                  - "secretsmanager:CreateSecret"
+                  - "secretsmanager:GetSecretValue"
+                  - "secretsmanager:PutSecretValue"
+                  - "secretsmanager:DeleteSecret"
+                  - "secretsmanager:TagResource"
+                  - "secretsmanager:UntagResource"
+                  - "secretsmanager:DescribeSecret"
+                  - "secretsmanager:ListSecrets"
+                  - "secretsmanager:GetResourcePolicy"
+                  - "secretsmanager:PutResourcePolicy"
+                  - "secretsmanager:DeleteResourcePolicy"
+                  - "secretsmanager:TagResource"
+                  - "secretsmanager:UntagResource"
+                Resource: "*"
+              # Reference: https://developer.hashicorp.com/terraform/language/backend/s3
+              - Effect: Allow
+                Action:
+                  - "s3:ListBucket"
+                Resource: !Sub "arn:aws:s3:::${Environment}-terraform-state-${AWS::AccountId}"
+              - Effect: Allow
+                Action:
+                  - "s3:GetObject"
+                  - "s3:PutObject"
+                  - "s3:DeleteObject"
+                Resource: !Sub "arn:aws:s3:::${Environment}-terraform-state-${AWS::AccountId}/*"
+              - Effect: Allow
+                Action:
+                  - "dynamodb:DeleteItem"
+                  - "dynamodb:GetItem"
+                  - "dynamodb:PutItem"
+                Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${Environment}-terraform-lock-${AWS::AccountId}"
+
+Outputs:
+  RoleARN:
+    Description: ARN of the created IAM Role
+    Value: !GetAtt InfrastructureDeployerRole.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}-RoleARN"
