@@ -63,6 +63,18 @@ jobs:
       #   run: |
       #     docker load -i multicloud-k8s-iac-$GITHUB_SHA.tar
 
+      - name: Install hadolint
+        uses: hadolint/hadolint-action@v2.12.0
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Install Trivy
+        uses: aquasecurity/setup-trivy@v0.2.0
+        with:
+          cache: true
+          version: v0.65.0
+
       - name: Run pre-commit hooks
         uses: pre-commit/action@v3.0.1
 
