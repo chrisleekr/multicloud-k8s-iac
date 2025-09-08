@@ -31,7 +31,7 @@ fi
 echo "Bastion instance ID: $BASTION_INSTANCE_ID"
 
 # Get the private IP address of the web servers from Terraform output
-WEB_SERVER_PRIVATE_IPS=$(cd "$SCRIPT_DIR/../stage2" && terraform output -json web_server_private_ips | jq -r '.[]')
+WEB_SERVER_PRIVATE_IPS=$(cd "$SCRIPT_DIR/../terraform" && terraform output -json web_server_private_ips | jq -r '.[]')
 
 # Print the private IP addresses of the web servers
 echo "Web server private IP addresses:"
