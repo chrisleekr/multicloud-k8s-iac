@@ -69,6 +69,10 @@ jobs:
           chmod +x hadolint
           mv hadolint /usr/local/bin/
 
+      - name: Install TFLint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
 
