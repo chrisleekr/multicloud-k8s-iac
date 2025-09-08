@@ -6,16 +6,39 @@ default_stages:
   - pre-push
 
 repos:
+  - repo: "https://github.com/hadolint/hadolint"
+    rev: "v2.12.0"
+    hooks:
+      - id: "hadolint"
+        name: "Lint Dockerfiles"
+        types:
+          - "dockerfile"
+        args:
+          - "--no-color"
+          - "--strict-labels"
+
+  - repo: https://github.com/gruntwork-io/pre-commit
+    rev: v0.1.30
+    hooks:
+      - id: helmlint
+        name: "Lint Helm"
+      - id: shellcheck
+        name: "Lint Shell"
+
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.97.0
     hooks:
       - id: terraform_fmt
+        name: "Format Terraform"
       - id: terraform_validate
+        name: "Validate Terraform"
         exclude: "^[^/]+$"
       - id: terraform_trivy
+        name: "Trivy"
         args:
           - --args=--config=__GIT_WORKING_DIR__/.trivyignore.yaml
       - id: terraform_tflint
+        name: "Lint Terraform with TFLint"
         args:
           - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
 

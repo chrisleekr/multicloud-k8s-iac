@@ -6,7 +6,7 @@ set -o errexit
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 DIR=$(realpath "$SCRIPT_DIR/..")
 
-# shellcheck source=common-func.sh
+# shellcheck source=/dev/null
 source "$SCRIPT_DIR/common-func.sh"
 
 log "Load .env..."
@@ -26,6 +26,7 @@ docker run -it --rm -d \
   --name "$IMAGE_NAME" \
   --env-file ".env" \
   -v "$(pwd):/srv" \
+  -v "./container/root:/root" \
   -v "$HOME/.minikube:/root/.minikube" \
   -v "/var/run/docker.sock:/var/run/docker.sock" \
   "$REGISTRY_DOMAIN/$REPO_NAME/$IMAGE_NAME:latest"

@@ -34,10 +34,9 @@ This project includes the following features:
 ## Task commands
 
 ```bash
-task setup-repo
-task precommit
-task docker-build
-task docker-exec
+task setup:repo
+task docker:exec
+$ task precommit
 ```
 
 ## Provision a cluster with Google Kubernetes Engine (GKE)
@@ -47,7 +46,7 @@ To provision a cluster with GKE, follow these steps:
 1. Launch the orchestrator by running the following command:
 
    ```bash
-   task docker-exec
+   task docker:exec
    ```
 
 2. Make the orchestrator accessible to the GKE cluster by running the following command:
@@ -115,7 +114,7 @@ To provision a cluster with Minikube, follow these steps:
 2. Launch the orchestrator by running the following command:
 
    ```bash
-   task docker-exec
+   task docker:exec
 
    # install docker
    apk add --no-cache docker
