@@ -29,7 +29,7 @@ tasks:
   precommit:
     desc: Run pre-commit hooks
     cmds:
-      - pre-commit run --all-files  --verbose
+      - pre-commit run --all-files --verbose
 
   validate:helm:
     desc: Validate Helm
@@ -59,8 +59,8 @@ tasks:
   docker:exec:
     desc: Execute docker command
     cmds:
-      - task docker-run
-      - task docker-shell
+      - task: docker:run
+      - task: docker:shell
 
   aws:cloudformation:validate:
     desc: Validate AWS CloudFormation

@@ -15,13 +15,9 @@ source "$SCRIPT_DIR/common-func.sh"
 
 ARGS=${1:-""}
 
-docker pull "$REGISTRY_DOMAIN/$REPO_NAME/$IMAGE_NAME:latest" || true
-
 # shellcheck disable=SC2086
 docker build . \
     ${ARGS} \
-    --pull \
-    --cache-from=$REGISTRY_DOMAIN/$REPO_NAME/$IMAGE_NAME:latest \
     --build-arg BUILDPLATFORM=$BUILD_PLATFORM \
     --build-arg BUILDARCH=$BUILD_ARCH \
     --progress plain \

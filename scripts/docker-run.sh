@@ -26,6 +26,7 @@ docker run -it --rm -d \
   --name "$IMAGE_NAME" \
   --env-file ".env" \
   -v "$(pwd):/srv" \
+  -v "./container/root:/root" \
   -v "$HOME/.minikube:/root/.minikube" \
   -v "/var/run/docker.sock:/var/run/docker.sock" \
   "$REGISTRY_DOMAIN/$REPO_NAME/$IMAGE_NAME:latest"
