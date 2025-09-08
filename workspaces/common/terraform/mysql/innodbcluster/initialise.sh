@@ -18,7 +18,7 @@ set -e
 
 mysql_execute(){
     SQL=$1
-    
+
     mysql -h"$MYSQL_HOST" -u"$MYSQL_ROOT_USER" -p"$MYSQL_ROOT_PASSWORD" -e "$SQL"
 }
 
