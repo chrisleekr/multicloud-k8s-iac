@@ -64,7 +64,10 @@ jobs:
       #     docker load -i multicloud-k8s-iac-$GITHUB_SHA.tar
 
       - name: Install hadolint
-        uses: hadolint/hadolint-action@v3.2.0
+        run: |
+          curl -L https://github.com/hadolint/hadolint/releases/download/v2.13.1/hadolint-linux-x86_64 -o hadolint
+          chmod +x hadolint
+          mv hadolint /usr/local/bin/
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
