@@ -72,23 +72,25 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
 
+      # - name: Install Helm
+      #   uses: azure/setup-helm@v4.3.1
+
       - name: Install Trivy
         uses: aquasecurity/setup-trivy@v0.2.0
         with:
           cache: true
-          version: v0.65.0
 
       - name: Run pre-commit hooks
         uses: pre-commit/action@v3.0.1
 
-      - name: Install Task
-        run: |
-          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+      # - name: Install Task
+      #   run: |
+      #     sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
 
       # - name: Set up repository
       #   run: |
       #     task setup:repo
 
-      - name: Run Task precommit to lint
-        run: |
-          task precommit
+      # - name: Run Task precommit to lint
+      #   run: |
+      #     task precommit
