@@ -7,7 +7,7 @@ set -e
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 # shellcheck source=/dev/null
-source "$SCRIPT_DIR/../../../scripts/common-func.sh"
+source "$SCRIPT_DIR/../../../../scripts/common-func.sh"
 
 log "Retrieving the IP address of host.docker.internal..."
 HOST_IP=$(nslookup host.docker.internal | grep 'Address: ' | tail -n1 | awk '{print $2}')

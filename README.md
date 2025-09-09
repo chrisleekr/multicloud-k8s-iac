@@ -10,8 +10,12 @@ Before getting started, please ensure that you have the following software insta
 
 - [Task](https://taskfile.dev/installation/): To simplify the command line interface.
 - [Pre-commit](https://pre-commit.com/#install): To run various linting and formatting tools.
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/)
+- [Helm](https://helm.sh/docs/intro/install/)
+- [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
 - [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
 - [Docker](https://docs.docker.com/engine/install/)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 - [Google Cloud CLI](https://cloud.google.com/sdk/docs/install)
 
 ## With this project, you can find

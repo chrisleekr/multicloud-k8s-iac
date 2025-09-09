@@ -1,11 +1,11 @@
 module "mysql" {
-  source = "../../common/terraform/mysql"
+  source = "../../../common/terraform/mysql"
 }
 
 module "kong_ingress" {
   count = var.ingress_class_name == "kong" ? 1 : 0
 
-  source = "../../common/terraform/kong-ingress"
+  source = "../../../common/terraform/kong-ingress"
 
   domain = var.domain
   # protocol                 = var.protocol
@@ -13,7 +13,7 @@ module "kong_ingress" {
 }
 
 module "nvm" {
-  source = "../../common/terraform/nvm"
+  source = "../../../common/terraform/nvm"
 
   depends_on = [
     module.mysql,
@@ -29,7 +29,7 @@ module "nvm" {
 }
 
 module "prometheus" {
-  source = "../../common/terraform/prometheus"
+  source = "../../../common/terraform/prometheus"
 
   depends_on = [
     module.nvm

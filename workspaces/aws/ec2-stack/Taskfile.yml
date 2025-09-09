@@ -1,0 +1,41 @@
+version: "3"
+
+tasks:
+  cloudformation:validate:
+    desc: Validate AWS CloudFormation for EC2 Stack
+    cmds:
+      - ./cloudformation/cloudformation-validate.sh
+
+  cloudformation:deploy:
+    desc: Deploy AWS CloudFormation for EC2 Stack
+    cmds:
+      - ./cloudformation/cloudformation-deploy.sh
+
+  terraform:init:
+    desc: Initialize AWS Terraform for EC2 Stack
+    dir: workspaces/aws/ec2-stack/terraform
+    cmds:
+      - terraform init
+
+  terraform:validate:
+    desc: Validate AWS Terraform for EC2 Stack
+    dir: workspaces/aws/ec2-stack/terraform
+    cmds:
+      - terraform validate
+
+  terraform:plan:
+    desc: Plan AWS Terraform for EC2 Stack
+    dir: workspaces/aws/ec2-stack/terraform
+    cmds:
+      - terraform plan
+
+  terraform:apply:
+    desc: Apply AWS Terraform for EC2 Stack
+    dir: workspaces/aws/ec2-stack/terraform
+    cmds:
+      - terraform apply
+
+  bastion:access:
+    desc: Access to AWS Bastion
+    cmds:
+      - ./scripts/access-bastion.sh

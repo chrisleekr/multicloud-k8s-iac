@@ -1,5 +1,5 @@
 module "bootstrap" {
-  source = "../../../../common/terraform/bootstrap"
+  source = "../../../../../common/terraform/bootstrap"
 
   depends_on = [
     module.mysql,

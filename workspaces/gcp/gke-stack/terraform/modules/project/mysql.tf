@@ -1,5 +1,5 @@
 module "mysql" {
-  source = "../../../../common/terraform/mysql"
+  source = "../../../../../common/terraform/mysql"
 
   server_instances                = 1
   router_instances                = 1

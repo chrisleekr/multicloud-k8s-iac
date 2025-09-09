@@ -20,6 +20,11 @@ env:
   REGION:
     sh: "echo ${REGION:-ap-southeast-2}"
 
+includes:
+  aws:ec2-stack: ./workspaces/aws/ec2-stack/Taskfile.yml
+  gcp:gke-stack: ./workspaces/gcp/gke-stack/Taskfile.yml
+  local:minikube-stack: ./workspaces/local/minikube-stack/Taskfile.yml
+
 tasks:
   setup:repo:
     desc: Setup the repository
@@ -61,90 +66,3 @@ tasks:
     cmds:
       - task: docker:run
       - task: docker:shell
-
-  aws:cloudformation:validate:
-    desc: Validate AWS CloudFormation
-    cmds:
-      - ./workspaces/aws/cloudformation/cloudformation-validate.sh
-
-  aws:cloudformation:deploy:
-    desc: Deploy AWS CloudFormation
-    cmds:
-      - ./workspaces/aws/cloudformation/cloudformation-deploy.sh
-
-  aws:terraform:init:
-    desc: Initialize AWS Terraform
-    dir: workspaces/aws/terraform
-    cmds:
-      - terraform init
-
-  aws:terraform:validate:
-    desc: Validate AWS Terraform
-    dir: workspaces/aws/terraform
-    cmds:
-      - terraform validate
-
-  aws:terraform:plan:
-    desc: Plan AWS Terraform
-    dir: workspaces/aws/terraform
-    cmds:
-      - terraform plan
-
-  aws:terraform:apply:
-    desc: Apply AWS Terraform
-    dir: workspaces/aws/terraform
-    cmds:
-      - terraform apply
-
-  aws:bastion:access:
-    desc: Access to AWS Bastion
-    cmds:
-      - ./workspaces/aws/scripts/access-bastion.sh
-
-  gcp:terraform:init:
-    desc: Initialize GCP Terraform
-    dir: workspaces/gcp/terraform
-    cmds:
-      - terraform init
-
-  gcp:terraform:validate:
-    desc: Validate GCP Terraform
-    dir: workspaces/gcp/terraform
-    cmds:
-      - terraform validate
-
-  gcp:terraform:plan:
-    desc: Plan GCP Terraform
-    dir: workspaces/gcp/terraform
-    cmds:
-      - terraform plan
-
-  gcp:terraform:apply:
-    desc: Apply GCP Terraform
-    dir: workspaces/gcp/terraform
-    cmds:
-      - terraform apply
-
-  minikube:terraform:init:
-    desc: Initialize Minikube Terraform
-    dir: workspaces/minikube/terraform
-    cmds:
-      - terraform init
-
-  minikube:terraform:validate:
-    desc: Validate Minikube Terraform
-    dir: workspaces/minikube/terraform
-    cmds:
-      - terraform validate
-
-  minikube:terraform:plan:
-    desc: Plan Minikube Terraform
-    dir: workspaces/minikube/terraform
-    cmds:
-      - terraform plan
-
-  minikube:terraform:apply:
-    desc: Apply Minikube Terraform
-    dir: workspaces/minikube/terraform
-    cmds:
-      - terraform apply

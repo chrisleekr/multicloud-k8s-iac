@@ -1,0 +1,26 @@
+version: "3"
+
+tasks:
+  terraform:init:
+    desc: Initialize GCP Terraform
+    dir: workspaces/gcp/gke-stack/terraform
+    cmds:
+      - terraform init
+
+  terraform:validate:
+    desc: Validate GCP Terraform
+    dir: workspaces/gcp/gke-stack/terraform
+    cmds:
+      - terraform validate
+
+  terraform:plan:
+    desc: Plan GCP Terraform
+    dir: workspaces/gcp/gke-stack/terraform
+    cmds:
+      - terraform plan
+
+  terraform:apply:
+    desc: Apply GCP Terraform
+    dir: workspaces/gcp/gke-stack/terraform
+    cmds:
+      - terraform apply

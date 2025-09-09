@@ -53,16 +53,6 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v5
 
-      # Leave this for future reference
-      # - name: Download Docker image
-      #   uses: actions/download-artifact@v5
-      #   with:
-      #     name: multicloud-k8s-iac
-
-      # - name: Load Docker image
-      #   run: |
-      #     docker load -i multicloud-k8s-iac-$GITHUB_SHA.tar
-
       - name: Install hadolint
         run: |
           curl -L https://github.com/hadolint/hadolint/releases/download/v2.13.1/hadolint-linux-x86_64 -o hadolint
@@ -75,9 +65,6 @@ jobs:
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
-
-      # - name: Install Helm
-      #   uses: azure/setup-helm@v4.3.1
 
       - name: Install Trivy
         uses: aquasecurity/setup-trivy@v0.2.0
