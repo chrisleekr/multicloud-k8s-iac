@@ -1,5 +1,5 @@
 module "nvm" {
-  source = "../../../../common/terraform/nvm"
+  source = "../../../../../common/terraform/nvm"
 
   depends_on = [
     module.mysql,

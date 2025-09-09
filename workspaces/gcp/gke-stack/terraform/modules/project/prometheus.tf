@@ -1,5 +1,5 @@
 module "prometheus" {
-  source = "../../../../common/terraform/prometheus"
+  source = "../../../../../common/terraform/prometheus"
 
   depends_on = [
     module.nvm

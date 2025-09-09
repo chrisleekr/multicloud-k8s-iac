@@ -1,0 +1,26 @@
+version: "3"
+
+tasks:
+  terraform:init:
+    desc: Initialize Minikube Terraform
+    dir: workspaces/local/minikube-stack/terraform
+    cmds:
+      - terraform init
+
+  terraform:validate:
+    desc: Validate Minikube Terraform
+    dir: workspaces/local/minikube-stack/terraform
+    cmds:
+      - terraform validate
+
+  terraform:plan:
+    desc: Plan Minikube Terraform
+    dir: workspaces/local/minikube-stack/terraform
+    cmds:
+      - terraform plan
+
+  terraform:apply:
+    desc: Apply Minikube Terraform
+    dir: workspaces/local/minikube-stack/terraform
+    cmds:
+      - terraform apply

@@ -9,7 +9,7 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 source "$SCRIPT_DIR/common-func.sh"
 
 # Array of directories to validate
-dirs=("aws" "gcp" "minikube")
+dirs=("aws/ec2-stack" "gcp/gke-stack" "local/minikube-stack")
 
 for dir in "${dirs[@]}"; do
     log "Validating $dir Terraform..."
