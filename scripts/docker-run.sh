@@ -13,13 +13,11 @@ log "Load .env..."
 # shellcheck source=/dev/null
 [[ -f "$DIR/.env" ]] && source "$DIR/.env"
 
-log "Build the docker image..."
-# shellcheck source=/dev/null
-source "${DIR}/scripts/docker-build.sh"
-
 log "Stop the container if it exists..."
 docker stop "$IMAGE_NAME" -t1 || true
-docker rm "$IMAGE_NAME" || true
+
+log "Wait for the container to stop..."
+docker wait "$IMAGE_NAME" || true
 
 log "Launch the container..."
 docker run -it --rm -d \
@@ -27,6 +25,7 @@ docker run -it --rm -d \
   --env-file ".env" \
   -v "$(pwd):/srv" \
   -v "./container/root:/root" \
+  -v "$HOME/.aws:/root/.aws" \
   -v "$HOME/.minikube:/root/.minikube" \
   -v "/var/run/docker.sock:/var/run/docker.sock" \
   "$REGISTRY_DOMAIN/$REPO_NAME/$IMAGE_NAME:latest"

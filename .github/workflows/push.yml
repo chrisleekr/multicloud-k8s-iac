@@ -1,6 +1,7 @@
 name: Lint & Validate
 on:
-  - push
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

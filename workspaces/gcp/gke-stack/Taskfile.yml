@@ -1,6 +1,27 @@
 version: "3"
 
+vars:
+  TF_WORKSPACE: gke
+
 tasks:
+  terraform:workspace:list:
+    desc: List GCP Terraform workspaces
+    dir: workspaces/gcp/gke-stack/terraform
+    cmds:
+      - terraform workspace list
+
+  terraform:workspace:new:
+    desc: New GCP Terraform workspace
+    dir: workspaces/gcp/gke-stack/terraform
+    cmds:
+      - terraform workspace new {{.TF_WORKSPACE}}
+
+  terraform:workspace:select:
+    desc: Select GCP Terraform workspace
+    dir: workspaces/gcp/gke-stack/terraform
+    cmds:
+      - terraform workspace select {{.TF_WORKSPACE}}
+
   terraform:init:
     desc: Initialize GCP Terraform
     dir: workspaces/gcp/gke-stack/terraform

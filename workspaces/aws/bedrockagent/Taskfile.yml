@@ -1,0 +1,64 @@
+version: "3"
+
+tasks:
+  login:
+    desc: Login to AWS
+    cmds:
+      - aws sso login --profile {{.AWS_BEDROCKAGENT_AWS_PROFILE}}
+
+  terraform:workspace:select:
+    desc: Select AWS Terraform workspace for Bedrock Agent
+    dir: workspaces/aws/bedrockagent/terraform
+    cmds:
+      - terraform workspace select -or-create dev
+
+  terraform:init:
+    desc: Initialize AWS Terraform for Bedrock Agent
+    dir: workspaces/aws/bedrockagent/terraform
+    cmds:
+      - terraform init
+
+  terraform:validate:
+    desc: Validate AWS Terraform for Bedrock Agent
+    dir: workspaces/aws/bedrockagent/terraform
+    cmds:
+      - terraform validate
+
+  terraform:plan:
+    desc: Plan AWS Terraform for Bedrock Agent
+    dir: workspaces/aws/bedrockagent/terraform
+    cmds:
+      - |
+        terraform plan \
+        -var="aws_profile={{.AWS_BEDROCKAGENT_AWS_PROFILE}}" \
+        -var="aws_region={{.AWS_BEDROCKAGENT_AWS_REGION}}"
+
+  terraform:graph:
+    desc: Generate AWS Terraform graph for Bedrock Agent
+    dir: workspaces/aws/bedrockagent/terraform
+    cmds:
+      - |
+        terraform plan \
+        -var="aws_profile={{.AWS_BEDROCKAGENT_AWS_PROFILE}}" \
+        -var="aws_region={{.AWS_BEDROCKAGENT_AWS_REGION}}" \
+        -out=tfplan
+      - |
+        terraform graph -plan=tfplan | dot -Tsvg > bedrockagent.svg
+
+  terraform:apply:
+    desc: Apply AWS Terraform for Bedrock Agent
+    dir: workspaces/aws/bedrockagent/terraform
+    cmds:
+      - |
+        terraform apply \
+        -var="aws_profile={{.AWS_BEDROCKAGENT_AWS_PROFILE}}" \
+        -var="aws_region={{.AWS_BEDROCKAGENT_AWS_REGION}}"
+
+  terraform:destroy:
+    desc: Destroy AWS Terraform for Bedrock Agent
+    dir: workspaces/aws/bedrockagent/terraform
+    cmds:
+      - |
+        terraform destroy \
+        -var="aws_profile={{.AWS_BEDROCKAGENT_AWS_PROFILE}}" \
+        -var="aws_region={{.AWS_BEDROCKAGENT_AWS_REGION}}"

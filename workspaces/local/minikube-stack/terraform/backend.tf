@@ -4,7 +4,7 @@ terraform {
     organization = "chrisleekr"
 
     workspaces {
-      prefix = "sample-minikube-"
+      prefix = "sample-local-minikube-stack-"
     }
   }
 }

@@ -1,8 +1,8 @@
 # Sample Kubernetes project for Multicloud
 
-> Infrastructure as Code (IaC) for Google Kubernetes Engine (GKE) or Minikube using Terraform/Helm
+> Infrastructure as Code (IaC) for AWS, Google Kubernetes Engine (GKE) or Minikube using Terraform/Helm
 
-This project demonstrates an implementation of Infrastructure as Code (IaC) for deploying microservices using the [NVM boilerplate](https://github.com/chrisleekr/nodejs-vuejs-mysql-boilerplate) to either Google Kubernetes Engine (GKE) or Minikube, accomplished through Terraform/Helm. Please keep in mind that this is a sample project and is not suitable for production environments.
+This project demonstrates an implementation of Infrastructure as Code (IaC) for deploying various architectures such as AWS, Google Kubernetes Engine (GKE) or Minikube using Terraform/Helm. Please keep in mind that this is a sample project and is not suitable for production environments.
 
 ## Prerequisites
 
@@ -22,8 +22,17 @@ Before getting started, please ensure that you have the following software insta
 
 This project includes the following features:
 
-- Terraform for deploying to `Google Kubernetes Engine` or `Minikube`:
-  - Google Kubernetes Engine
+- AWS
+  - Bedrock Agent Knowledge Base
+  - EC2 Stack
+- GCP
+  - Google Kubernetes Engine (GKE)
+  - Kubernetes Nginx Ingress Controller
+  - Kong Ingress Controller - DB-less
+  - Cert Manager
+  - MySQL InnoDBCluster
+  - Prometheus/Grafana
+- Minikube
   - Kubernetes Nginx Ingress Controller
   - Kong Ingress Controller - DB-less
   - Cert Manager
@@ -43,7 +52,43 @@ task docker:exec
 $ task precommit
 ```
 
-## Provision a cluster with Google Kubernetes Engine (GKE)
+## Provision AWS Bedrock Agent Knowledge Base
+
+To provision AWS Bedrock Agent Knowledge Base, follow these steps:
+
+```bash
+task docker:exec
+
+task aws:bedrockagent:terraform:init
+task aws:bedrockagent:terraform:workspace:list
+task aws:bedrockagent:terraform:workspace:select
+task aws:bedrockagent:terraform:workspace:new # if required
+task aws:bedrockagent:terraform:validate
+task aws:bedrockagent:terraform:plan
+task aws:bedrockagent:terraform:apply
+task aws:bedrockagent:terraform:destroy
+```
+
+![AWS Bedrock Agent](workspaces/aws/bedrockagent/terraform/bedrockagent.svg)
+
+## Provision AWS EC2 Stack
+
+To provision AWS EC2 Stack, follow these steps:
+
+```bash
+task docker:exec
+
+task aws:ec2-stack:terraform:init
+task aws:ec2-stack:terraform:workspace:list
+task aws:ec2-stack:terraform:workspace:select
+task aws:ec2-stack:terraform:workspace:new # if required
+task aws:ec2-stack:terraform:validate
+task aws:ec2-stack:terraform:plan
+task aws:ec2-stack:terraform:apply
+task aws:ec2-stack:terraform:destroy
+```
+
+## Provision a Kubernetes cluster with Google Kubernetes Engine (GKE)
 
 To provision a cluster with GKE, follow these steps:
 
@@ -63,14 +108,14 @@ To provision a cluster with GKE, follow these steps:
 3. Run the Terraform commands by navigating to the appropriate directory and running the following commands:
 
    ```bash
-   cd workspaces/google/terraform/
-   terraform init
-   terraform workspace list
-   terraform workspace new gke-iac # if required
-   terraform workspace select gke-iac
-   terraform init
-   terraform plan
-   terraform apply
+   task gcp:gke-stack:terraform:init
+   task gcp:gke-stack:terraform:workspace:list
+   task gcp:gke-stack:terraform:workspace:select
+   task gcp:gke-stack:terraform:workspace:new # if required
+   task gcp:gke-stack:terraform:validate
+   task gcp:gke-stack:terraform:plan
+   task gcp:gke-stack:terraform:apply
+   task gcp:gke-stack:terraform:destroy
    ```
 
    After applying Terraform, it will output the load balancer IP address.
@@ -133,14 +178,14 @@ To provision a cluster with Minikube, follow these steps:
 4. Run the Terraform commands by navigating to the appropriate directory and running the following commands:
 
    ```bash
-   cd /srv/workspaces/minikube/terraform
-   terraform init
-   terraform workspace list
-   terraform workspace new minikube-iac # if required
-   terraform workspace select minikube-iac
-   terraform init
-   terraform plan
-   terraform apply
+   task local:minikube-stack:terraform:init
+   task local:minikube-stack:terraform:workspace:list
+   task local:minikube-stack:terraform:workspace:select
+   task local:minikube-stack:terraform:workspace:new # if required
+   task local:minikube-stack:terraform:validate
+   task local:minikube-stack:terraform:plan
+   task local:minikube-stack:terraform:apply
+   task local:minikube-stack:terraform:destroy
    ```
 
 5. Update your host file with the following entry:

@@ -10,7 +10,7 @@ ARG GOOGLE_CLOUD_SDK_VERSION=537.0.0
 ARG KUBECTL_VERSION=1.34.0
 ARG HELM_VERSION=3.18.6
 ARG TERRAFORM_VERSION=1.13.1
-ARG TASKFILE_VERSION=3.36.0
+ARG TASKFILE_VERSION=3.44.1
 ARG TRIVY_VERSION=0.66.0
 
 # BUILDPLATFORM=linux/arm64/v8, BUILDARCH=arm64
@@ -30,10 +30,14 @@ RUN set -eux; \
     yq-go=4.46.1-r2 \
     jq=1.8.0-r0 \
     git=2.49.1-r0 \
+    graphviz=12.2.1-r0 \
     python3=3.12.11-r0 \
     py3-pip=25.1.1-r0 \
     pre-commit=4.2.0-r0 \
     shellcheck=0.10.0-r2 \
+    bash-completion=2.16.0-r0 \
+    # Install AWS CLI
+    aws-cli=2.27.25-r0 \
     && \
     \
     # Install kubectl
@@ -106,6 +110,9 @@ RUN export GOOGLE_CLOUD_SDK_ARCH="x86_64"; \
     rm -rf google-cloud-sdk/.install/.backup \
     google-cloud-sdk/bin/anthoscli \
     google-cloud-sdk/lib/googlecloudsdk/third_party/apis
+
+# AWS CLI Setting
+RUN export AWS_PAGER=""
 
 WORKDIR /srv
 
