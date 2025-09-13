@@ -71,3 +71,6 @@ function display_ps1() {
 }
 
 export PROMPT_COMMAND='PS1=$(display_ps1)'
+
+# Task completion
+eval "$(task --completion bash)"

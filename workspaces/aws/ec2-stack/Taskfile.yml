@@ -1,5 +1,8 @@
 version: "3"
 
+vars:
+  TF_WORKSPACE: ec2
+
 tasks:
   cloudformation:validate:
     desc: Validate AWS CloudFormation for EC2 Stack
@@ -10,6 +13,24 @@ tasks:
     desc: Deploy AWS CloudFormation for EC2 Stack
     cmds:
       - ./cloudformation/cloudformation-deploy.sh
+
+  terraform:workspace:list:
+    desc: List AWS Terraform workspaces
+    dir: workspaces/aws/ec2-stack/terraform
+    cmds:
+      - terraform workspace list
+
+  terraform:workspace:new:
+    desc: New AWS Terraform workspace
+    dir: workspaces/aws/ec2-stack/terraform
+    cmds:
+      - terraform workspace new {{.TF_WORKSPACE}}
+
+  terraform:workspace:select:
+    desc: Select AWS Terraform workspace
+    dir: workspaces/aws/ec2-stack/terraform
+    cmds:
+      - terraform workspace select {{.TF_WORKSPACE}}
 
   terraform:init:
     desc: Initialize AWS Terraform for EC2 Stack

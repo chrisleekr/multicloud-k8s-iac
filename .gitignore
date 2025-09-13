@@ -13,3 +13,10 @@ container/root/*
 
 
 .DS_Store
+
+
+workspaces/aws/bedrockagent/docs/*
+!workspaces/aws/bedrockagent/docs/*/
+workspaces/aws/bedrockagent/docs/*/*
+!workspaces/aws/bedrockagent/docs/.gitkeep
+workspaces/aws/bedrockagent/terraform/tfplan

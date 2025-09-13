@@ -4,7 +4,7 @@ terraform {
     organization = "chrisleekr"
 
     workspaces {
-      prefix = "sample-aws-"
+      prefix = "sample-aws-ec2-stack-"
     }
   }
 }

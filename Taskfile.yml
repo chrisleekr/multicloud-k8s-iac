@@ -22,6 +22,7 @@ env:
 
 includes:
   aws:ec2-stack: ./workspaces/aws/ec2-stack/Taskfile.yml
+  aws:bedrockagent: ./workspaces/aws/bedrockagent/Taskfile.yml
   gcp:gke-stack: ./workspaces/gcp/gke-stack/Taskfile.yml
   local:minikube-stack: ./workspaces/local/minikube-stack/Taskfile.yml
 

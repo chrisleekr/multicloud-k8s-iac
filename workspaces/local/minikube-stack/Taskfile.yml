@@ -1,6 +1,27 @@
 version: "3"
 
+vars:
+  TF_WORKSPACE: minikube
+
 tasks:
+  terraform:workspace:list:
+    desc: List Minikube Terraform workspaces
+    dir: workspaces/local/minikube-stack/terraform
+    cmds:
+      - terraform workspace list
+
+  terraform:workspace:new:
+    desc: New Minikube Terraform workspace
+    dir: workspaces/local/minikube-stack/terraform
+    cmds:
+      - terraform workspace new {{.TF_WORKSPACE}}
+
+  terraform:workspace:select:
+    desc: Select Minikube Terraform workspace
+    dir: workspaces/local/minikube-stack/terraform
+    cmds:
+      - terraform workspace select {{.TF_WORKSPACE}}
+
   terraform:init:
     desc: Initialize Minikube Terraform
     dir: workspaces/local/minikube-stack/terraform

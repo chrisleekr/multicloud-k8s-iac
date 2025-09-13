@@ -4,7 +4,7 @@ terraform {
     organization = "chrisleekr"
 
     workspaces {
-      prefix = "sample-gcp-gke-stack-"
+      prefix = "sample-aws-bedrockagent-"
     }
   }
 }
