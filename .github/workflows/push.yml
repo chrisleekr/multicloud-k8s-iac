@@ -39,7 +39,7 @@ jobs:
           docker save multicloud-k8s-iac:$GITHUB_SHA -o multicloud-k8s-iac-$GITHUB_SHA.tar
 
       - name: Upload Docker image
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: multicloud-k8s-iac
           path: multicloud-k8s-iac-${{github.sha}}.tar
